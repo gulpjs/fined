@@ -561,7 +561,7 @@ testrun('fined:', testfn, [
       {
         name: 'When \'name\' is an absolute path and \'path\' is empty (2)',
         pathObj: {
-          name: userHomeFile.path,
+          name: path.join(userHomeFile.dir, userHomeFile.name),
         },
         defaultObj: {
           path: '',
