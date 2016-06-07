@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "expand-tilde": "^1.2.1",
-    "lodash.defaults": "^4.0.1",
+    "lodash.assignwith": "^4.0.7",
     "lodash.isarray": "^4.0.0",
     "lodash.isempty": "^4.2.1",
     "lodash.isplainobject": "^4.0.4",

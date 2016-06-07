@@ -102,7 +102,7 @@ describe('Basic behaviors', function() {
     done();
   });
 
-  it('returns null when 1st argument is invalid', function(done) {
+  it('treats 1st argument as an empty object when it is invalid', function(done) {
     var pathObj = 123;
 
     var defaultObj = {
@@ -113,7 +113,10 @@ describe('Basic behaviors', function() {
       findUp: false,
     };
 
-    var expected = null;
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
 
     var result = fined(pathObj, defaultObj);
 
@@ -212,6 +215,34 @@ describe('Argument defaulting', function() {
     done();
   });
 
+  it('defaults null properties in the 1st argument', function(done) {
+    var pathObj = {
+      name: null,
+      path: null,
+      extensions: null,
+      cwd: null,
+      findUp: null,
+    };
+
+    var defaultObj = {
+      name: 'package',
+      path: 'test/fixtures/fined',
+      extensions: ['.json', '.js'],
+      cwd: cwd,
+      findUp: false,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
   it('does not default when both arguments are complete', function(done) {
     var pathObj = {
       name: 'README',
@@ -240,8 +271,7 @@ describe('Argument defaulting', function() {
     done();
   });
 
-  // TODO: is this correct behavior?
-  it('does not default if 1st argument is null', function(done) {
+  it('defaults everything if 1st argument is null', function(done) {
     var pathObj = null;
 
     var defaultObj = {
@@ -252,7 +282,10 @@ describe('Argument defaulting', function() {
       findUp: false,
     };
 
-    var expected = null;
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
 
     var result = fined(pathObj, defaultObj);
 
@@ -307,14 +340,37 @@ describe('Argument defaulting', function() {
 
 describe('Properties: `path`', function() {
 
-  // TODO: change
-  it('returns null when `path` is null', function(done) {
+  it('defaults `path` when it is null', function(done) {
     var pathObj = {
       path: null,
     };
 
     var defaultObj = {
       path: 'fixtures/fined',
+      extensions: ['.json', '.js'],
+      findUp: false,
+      name: 'app',
+      cwd: path.resolve(cwd, 'test'),
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('returns null when `path` is null after defaulting', function(done) {
+    var pathObj = {
+      path: null,
+    };
+
+    var defaultObj = {
+      path: null,
       extensions: ['.json', '.js'],
       findUp: false,
       name: 'app',

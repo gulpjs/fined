@@ -8,11 +8,18 @@ var isArray = require('lodash.isarray');
 var isPlainObject = require('lodash.isplainobject');
 var isEmpty = require('lodash.isempty');
 var pick = require('lodash.pick');
-var defaults = require('lodash.defaults');
+var assignWith = require('lodash.assignwith');
 
 var expandTilde = require('expand-tilde');
 var parsePath = require('parse-filepath');
 
+function assignNullish(objValue, srcValue) {
+  return (srcValue == null ? objValue : srcValue);
+}
+
+function defaults(mainObj, defaultObj) {
+  return assignWith({}, defaultObj, mainObj, assignNullish);
+}
 
 function fined(pathObj, defaultObj) {
   var expandedArr = expandPaths(pathObj, defaultObj);
@@ -27,16 +34,18 @@ function fined(pathObj, defaultObj) {
 
 function expandPaths(pathObj, defaultObj) {
   if (!isPlainObject(defaultObj)) {
-    defaultObj = null;
+    defaultObj = {};
   }
 
   if (isString(pathObj)) {
-    pathObj = defaults({ path: pathObj }, defaultObj);
-  } else if (isPlainObject(pathObj)) {
-    pathObj = defaults({}, pathObj, defaultObj);
-  } else {
-    return [];
+    pathObj = { path: pathObj };
   }
+
+  if (!isPlainObject(pathObj)) {
+    pathObj = {};
+  }
+
+  pathObj = defaults(pathObj, defaultObj);
 
   var filePath;
   if (!isString(pathObj.path)) {
