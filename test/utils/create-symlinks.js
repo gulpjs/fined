@@ -3,8 +3,8 @@
 var fs = require('fs');
 var path = require('path');
 
-var dir = path.resolve(__dirname);
-var basedir = path.resolve(__dirname, '../../../');
+var dir = path.resolve(__dirname, '../fixtures/fined');
+var basedir = path.resolve(__dirname, '../../');
 
 var symlinkedFiles = [0,1,2,3,4,5].map(function(v, j) {
   return path.resolve(dir, 'symlink' + j + '.json');

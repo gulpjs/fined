@@ -1,1159 +1,1609 @@
 'use strict';
 
+var os = require('os');
 var path = require('path');
-var testrun = require('testrun').mocha;
+var expect = require('expect');
 
 var cwd = process.cwd();
-var winDrive = testrun.byPlatform({ win32: cwd.slice(0, 2), otherwise: '' });
+var isWindows = (os.platform() === 'win32');
 
-var userHomeFile = require('./fixtures/fined/get_userhomefile');
-var symlinkedFiles = require('./fixtures/fined/create_symlinks');
-
+var userHomeFile = require('./utils/get-userhome-file');
+var symlinkedFiles = require('./utils/create-symlinks');
 
 var fined = require('../');
 
-function testfn(testcase) {
-  return fined(testcase.pathObj, testcase.defaultObj);
-}
+describe('Basic behaviors', function() {
 
-testrun('fined:', testfn, [
-  {
-    name: 'About basic behaviors',
-    cases: [
-      {
-        name: 'When target file exists',
-        pathObj: {
-          path: 'test/fixtures/fined',
-          extensions: ['.json', '.js'],
-        },
-        defaultObj: {
-          name: 'app',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When target file does not exist => null',
-        pathObj: {
-          path: 'test/fixtures/fined',
-          extensions: ['.json', '.js'],
-        },
-        defaultObj: {
-          name: 'aaa',
-          cwd: cwd,
-        },
-        expected: null,
-      },
-    ],
-  },
-  {
-    name: 'About that 2nd argument supplements 1st argument',
-    cases: [
-      {
-        name: 'When 1st argument is full',
-        pathObj: {
-          name: 'package',
-          path: 'test/fixtures/fined',
-          extensions: ['.json', '.js'],
-          cwd: cwd,
-          findUp: false,
-        },
-        defaultObj: {},
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When 1st argument is empty and 2nd argument is null',
-        pathObj: {},
-        defaultObj: {
-          name: 'package',
-          path: 'test/fixtures/fined',
-          extensions: ['.json', '.js'],
-          cwd: cwd,
-          findUp: false,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When 1st argument lacks some properties',
-        pathObj: {
-          name: 'app',
-          cwd: path.resolve(cwd, 'test'),
-        },
-        defaultObj: {
-          path: 'fixtures/fined',
-          extensions: ['.json', '.js'],
-          findUp: false,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When both 1st and 2nd arguments are full',
-        pathObj: {
-          name: 'README',
-          path: '.',
-          extensions: ['.md', '.txt'],
-          findUp: true,
-          cwd: path.resolve(cwd, 'test/fixtures'),
-        },
-        defaultObj: {
-          path: 'fixtures/fined',
-          extensions: ['.json', '.js'],
-          findUp: false,
-          name: 'app',
-          cwd: path.resolve(cwd, 'test'),
-        },
-        expected: {
-          path: path.resolve(cwd, 'README.md'),
-          extension: '.md',
-        },
-      },
-      {
-        name: 'When both 1st and 2nd arguments are empty => null',
-        pathObj: {},
-        defaultObj: {},
-        expected: null,
-      },
-      {
-        name: 'When 1st argument is a string : 1st arg. is treated as ' +
-              '{path: arg}',
-        pathObj: 'test/fixtures/fined',
-        defaultObj: {
-          name: 'app',
-          extensions: ['.json', '.js'],
-          cwd: cwd,
-          findUp: false,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When 1st arguments is null => null',
-        pathObj: null,
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          extensions: ['.json', '.js'],
-          cwd: cwd,
-          findUp: false,
-        },
-        expected: null,
-      },
-      {
-        name: 'When 2nd arguments is null : 2nd argument is ignored',
-        pathObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          extensions: ['.json', '.js'],
-          cwd: cwd,
-          findUp: false,
-        },
-        defaultObj: null,
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When both 1st and 2nd arguments is null => null',
-        pathObj: null,
-        defaultObj: null,
-        expected: null,
-      },
-      {
-        name: 'When 1st argument is illegal type => null',
-        pathObj: 123,
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          extensions: ['.json', '.js'],
-          cwd: cwd,
-          findUp: false,
-        },
-        expected: null,
-      },
-      {
-        name: 'When 2nd argument is illegal type : 2nd argument is ignored',
-        pathObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          extensions: ['.json', '.js'],
-          cwd: cwd,
-          findUp: false,
-        },
-        defaultObj: 123,
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When both 1st and 2nd arguments are illegal types => null',
-        pathObj: function() {
-          return {
-            path: 'test/fixtures/fined',
-            name: 'app',
-            extensions: ['.json', '.js'],
-            cwd: cwd,
-            findUp: false,
-          };
-        },
-        defaultObj: true,
-        expected: null,
-      },
-    ],
-  },
-  {
-    name: 'About property \'path\'',
-    cases: [
-      {
-        name: 'When \'path\' is null => null',
-        pathObj: {
-          path: null,
-        },
-        defaultObj: {
-          path: 'fixtures/fined',
-          extensions: ['.json', '.js'],
-          findUp: false,
-          name: 'app',
-          cwd: path.resolve(cwd, 'test'),
-        },
-        expected: null,
-      },
-      {
-        name: 'When \'path\' is an empty string',
-        pathObj: {
-          path: '',
-        },
-        defaultObj: {
-          extensions: ['.json', '.js'],
-          findUp: false,
-          name: 'package',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When \'path\' and \'name\' is an empty string',
-        pathObj: {
-          path: '',
-          name: '',
-        },
-        defaultObj: {
-          extensions: [''],
-          findUp: false,
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'path\' is not a string => null',
-        pathObj: {
-          path: function() {
-            return 'test/fixtures/fined';
-          },
-        },
-        defaultObj: {
-          extensions: ['.js', '.json'],
-          findUp: false,
-          name: 'app',
-          cwd: cwd,
-        },
-        expected: null,
-      },
-      {
-        name: 'When \'path\' is a String object',
-        pathObj: new String('test/fixtures/fined'),
-        defaultObj: {
-          extensions: ['.js', '.json'],
-          findUp: false,
-          name: 'app',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'path\' is a String object (2)',
-        pathObj: new String('test/fixtures/fined'),
-        defaultObj: {
-          extensions: ['', '.js', '.json'],
-          findUp: false,
-          name: null,
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'path\' is \'~\' : expands \'~\' to homedir',
-        pathObj: {
-          path: '~',
-        },
-        defaultObj: {
-          extensions: [userHomeFile.ext],
-          findUp: false,
-          name: userHomeFile.name,
-          cwd: cwd,
-        },
-        expected: {
-          path: userHomeFile.path,
-          extension: userHomeFile.ext,
-        },
-      },
-      {
-        name: 'When \'path\' is \'~/xxx\' : expands \'~\' to homedir',
-        pathObj: {
-          path: '~/' + userHomeFile.name,
-        },
-        defaultObj: {
-          extensions: [userHomeFile.ext],
-          findUp: false,
-          name: null,
-          cwd: cwd,
-        },
-        expected: {
-          path: userHomeFile.path,
-          extension: userHomeFile.ext,
-        },
-      },
-      {
-        name: 'When \'path\' is \'~xxx\' : expands \'~\' to homedir',
-        pathObj: {
-          path: '~' + userHomeFile.name,
-        },
-        defaultObj: {
-          extensions: [userHomeFile.ext],
-          findUp: false,
-          name: null,
-          cwd: cwd,
-        },
-        expected: {
-          path: userHomeFile.path,
-          extension: userHomeFile.ext,
-        },
-      },
-      {
-        name: 'When \'path\' is \'~+\' : expands \'~+\' to process.cwd()',
-        pathObj: {
-          path: '~+',
-        },
-        defaultObj: {
-          extensions: ['.json'],
-          findUp: false,
-          name: 'package',
-          cwd: path.resolve(cwd, 'test/fixtures/fined'),
-        },
-        expected: {
-          path: path.resolve(cwd, 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When \'path\' is \'~+/xxx\' : expands \'~+\' to process.cwd()',
-        pathObj: {
-          path: '~+/package',
-        },
-        defaultObj: {
-          extensions: ['.json'],
-          findUp: false,
-          name: '',
-          cwd: path.resolve(cwd, 'test/fixtures/fined'),
-        },
-        expected: {
-          path: path.resolve(cwd, 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When \'path\' is \'~+xxx\' : expands \'~+\' to process.cwd()',
-        pathObj: {
-          path: '~+package',
-        },
-        defaultObj: {
-          extensions: ['.json'],
-          findUp: false,
-          name: '',
-          cwd: path.resolve(cwd, 'test/fixtures/fined'),
-        },
-        expected: {
-          path: path.resolve(cwd, 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When \'path\' is absolute : not use \'cwd\' property',
-        pathObj: {
-          path: cwd,
-          cwd: path.resolve(cwd, 'test/fixtures/fined'),
-        },
-        defaultObj: {
-          extensions: ['.json'],
-          findUp: false,
-          name: 'package',
-        },
-        expected: {
-          path: path.resolve(cwd, 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When \'path\' is \'C:xxx\' (for Windows)',
-        pathObj: {
-          path: winDrive + 'test\\fixtures\\fined',
-        },
-        defaultObj: {
-          name: 'app',
-          findUp: false,
-          extensions: ['.js'],
-        },
-        expected: testrun.byPlatform({ otherwise: null, win32: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        }, }),
-      },
-    ],
-  },
-  {
-    name: 'About property \'name\'',
-    cases: [
-      {
-        name: 'When \'name\' is null : ignored and use only \'path\'',
-        pathObj: {
-          name: null,
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          extensions: [''],
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'name\' is an empty string : ' +
-              'ignored and use only \'path\'',
-        pathObj: {
-          name: '',
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          extensions: [''],
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'name\' is not a string : ignored and use only \'path\'',
-        pathObj: {
-          name: 123,
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          extensions: [''],
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'name\' is a String object',
-        pathObj: {
-          name: new String('app'),
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          extensions: ['.js'],
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'name\' is a String object (2)',
-        pathObj: {
-          name: new String('package'),
-        },
-        defaultObj: {
-          path: '',
-          extensions: ['.json'],
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When \'name\' indicates a directory',
-        pathObj: {
-          name: 'fined',
-        },
-        defaultObj: {
-          path: 'test/fixtures',
-          extensions: [''],
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures', 'fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'name\' is an absolute path and \'path\' is empty',
-        pathObj: {
-          name: path.resolve(cwd, 'test/fixtures/fined/app'),
-        },
-        defaultObj: {
-          path: '',
-          extensions: ['.js'],
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined/app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'name\' is an absolute path and \'path\' is not empty',
-        pathObj: {
-          name: path.resolve(cwd, 'test/fixtures/fined/app'),
-          path: 'test/fixtures/fined',
-        },
-        defaultObj: {
-          extensions: ['.js'],
-          cwd: cwd,
-        },
-        expected: null,
-      },
-      {
-        name: 'When \'name\' is an absolute path and \'path\' is empty (2)',
-        pathObj: {
-          name: path.join(userHomeFile.dir, userHomeFile.name),
-        },
-        defaultObj: {
-          path: '',
-          extensions: [userHomeFile.ext],
-          cwd: cwd,
-        },
-        expected: {
-          path: userHomeFile.path,
-          extension: userHomeFile.ext,
-        },
-      },
-      {
-        name: 'When \'name\' has \'~\' : not expanded',
-        pathObj: {
-          name: '~/' + userHomeFile.name,
-        },
-        defaultObj: {
-          path: '',
-          extensions: [userHomeFile.ext],
-          cwd: cwd,
-        },
-        expected: null,
-      },
-    ],
-  },
-  {
-    name: 'About property \'extensions\'',
-    cases: [
-      {
-        name: 'When \'extensions\' is a string',
-        pathObj: {
-          extensions: '.js',
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'extensions\' is an array',
-        pathObj: {
-          extensions: ['.json', '.txt', '.js'],
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'extensions\' is an object',
-        pathObj: {
-          extensions: {
-            '.json': 1,
-            '.js': 2,
-            '.txt': 3,
-            '.yml': 4,
-          },
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: { '.js': 2 },
-        },
-      },
-      {
-        name: 'When multiple extensions hit : adopt first hitting extension',
-        pathObj: {
-          extensions: ['.json', '.js'],
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'appfile',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: 'When multiple extensions hit (2) ',
-        pathObj: {
-          extensions: ['.js', '.json'],
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'appfile',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'extensions\' is null : treated as [\'\']',
-        pathObj: {
-          extensions: null,
-        },
-        defaultObj: {
-          path: 'test/fixtures',
-          name: 'fined',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures', 'fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'extensions\' is an empty string : treated as [\'\']',
-        pathObj: {
-          extensions: '',
-        },
-        defaultObj: {
-          path: 'test/fixtures',
-          name: 'fined',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures', 'fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'extensions\' is an empty array : treated as [\'\']',
-        pathObj: {
-          extensions: [],
-        },
-        defaultObj: {
-          path: 'test/fixtures',
-          name: 'fined',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures', 'fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'extensions\' is an empty object : ' +
-              'treated as {\'\':null}',
-        pathObj: {
-          extensions: {},
-        },
-        defaultObj: {
-          path: 'test/fixtures',
-          name: 'fined',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures', 'fined'),
-          extension: { '': null },
-        },
-      },
-      {
-        name: 'When \'extensions\' is illegal type : treated as [\'\']',
-        pathObj: {
-          extensions: 123,
-        },
-        defaultObj: {
-          path: 'test/fixtures',
-          name: 'fined',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures', 'fined'),
-          extension: '',
-        },
-      },
-      {
-        name: 'When \'extensions\' elements are String objects',
-        pathObj: {
-          extensions: [new String('.json'), new String('.js')],
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'extensions\' property key are String objects',
-        pathObj: {
-          extensions: (function() {
-            var exts = {};
-            exts[new String('.json')] = 1;
-            exts[new String('.js')] = 2;
-            return exts;
-          }()),
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'app',
-          cwd: cwd,
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-          extension: { '.js': 2 },
-        },
-      },
-    ],
-  },
-  {
-    name: 'About property \'cwd\'',
-    cases: [
-      {
-        name: 'When \'cwd\' is absolute',
-        pathObj: {
-          cwd: path.resolve('.'),
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'appfile',
-          extensions: '.js',
-        },
-        expected: {
-          path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'cwd\' is relative',
-        pathObj: {
-          cwd: '.',
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'appfile',
-          extensions: '.js',
-        },
-        expected: {
-          path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'cwd\' is relative (2)',
-        pathObj: {
-          cwd: 'test/fixtures',
-        },
-        defaultObj: {
-          path: 'fined',
-          name: 'appfile',
-          extensions: '.js',
-        },
-        expected: {
-          path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'cwd\' is null : treated as \'.\'',
-        pathObj: {
-          cwd: null,
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'appfile',
-          extensions: '.js',
-        },
-        expected: {
-          path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'cwd\' is empty string : treated as \'.\'',
-        pathObj: {
-          cwd: '',
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'appfile',
-          extensions: '.js',
-        },
-        expected: {
-          path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'cwd\' is not a string : treated as \'.\'',
-        pathObj: {
-          cwd: 123,
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'appfile',
-          extensions: '.js',
-        },
-        expected: {
-          path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'cwd\' is a String object',
-        pathObj: {
-          cwd: new String(cwd),
-        },
-        defaultObj: {
-          path: 'test/fixtures/fined',
-          name: 'appfile',
-          extensions: '.js',
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined/appfile.js'),
-          extension: '.js',
-        },
-      },
-      {
-        name: 'When \'cwd\' has \'~\' : expanded \'~\' to homedir',
-        pathObj: {
-          cwd: '~',
-        },
-        defaultObj: {
-          path: '',
-          name: userHomeFile.name,
-          extensions: userHomeFile.ext,
-        },
-        expected: {
-          path: userHomeFile.path,
-          extension: userHomeFile.ext,
-        },
-      },
-    ],
-  },
-  {
-    name: 'About property \'findUp\'',
-    cases: [
-      {
-        name: 'find up a file',
-        pathObj: {
-          path: '',
-          findUp: true,
-        },
-        defaultObj: {
-          name: 'README',
-          extensions: ['.md'],
-          cwd: 'test/fixtures/fined',
-        },
-        expected: {
-          path: path.resolve(cwd, 'README.md'),
-          extension: '.md',
-        },
-      },
-      {
-        name: 'find up a directory',
-        pathObj: {
-          path: '',
-          findUp: true,
-        },
-        defaultObj: {
-          name: 'test',
-          extensions: ['.md', ''],
-          cwd: 'fixtures/fined',
-        },
-        expected: {
-          path: path.resolve(cwd, 'test'),
-          extension: '',
-        },
-      },
-      {
-        name: 'target file exists current directory',
-        pathObj: {
-          path: '',
-          extensions: '.json',
-          findUp: true,
-        },
-        defaultObj: {
-          name: 'package',
-          cwd: 'test/fixtures/fined',
-        },
-        expected: {
-          path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
-          extension: '.json',
-        },
-      },
-      {
-        name: '\'path\' is absolute : findup is disabled.',
-        pathObj: {
-          findUp: true,
-          path: path.resolve(cwd, 'test'),
-          extensions: '.md',
-        },
-        defaultObj: {
-          name: 'README',
-          cwd: path.resolve(cwd, 'test'),
-        },
-        expected: null,
-      },
-      {
-        name: '\'cwd\' is \'C:xxx\\yyy\' (for Windows)',
-        pathObj: {
-          findUp: true,
-          name: 'package',
-          path: '',
-          cwd: 'C:test\\fixtures',
-          extensions: '.json',
-        },
-        defaultObj: {},
-        expected: {
-          path: path.resolve(cwd, 'package.json'),
-          extension: '.json',
-        },
-      },
-    ],
-  },
-  {
-    name: 'About symbolic link',
-    cases: [
-      {
-        name: 'When hit file is a symbolic link of a normal file',
-        pathObj: {
-          path: '.',
-          name: symlinkedFiles[0].name,
-          extensions: [symlinkedFiles[0].ext],
-          cwd: symlinkedFiles[0].dir,
-        },
-        defaultObj: {},
-        expected: {
-          path: symlinkedFiles[0].path,
-          extension: symlinkedFiles[0].ext,
-        },
-      },
-      {
-        name: 'When hit file is a symbolic link of a normal file (2)',
-        pathObj: {
-          path: '.',
-          name: symlinkedFiles[1].name,
-          extensions: [symlinkedFiles[1].ext],
-          cwd: symlinkedFiles[1].dir,
-        },
-        defaultObj: {},
-        expected: {
-          path: symlinkedFiles[1].path,
-          extension: symlinkedFiles[1].ext,
-        },
-      },
-      {
-        name: 'When hit file is a invalid symblic link => null',
-        pathObj: {
-          path: '.',
-          name: symlinkedFiles[2].name,
-          extensions: [symlinkedFiles[2].ext],
-          cwd: symlinkedFiles[2].dir,
-        },
-        defaultObj: {},
-        expected: null,
-      },
-      {
-        name: 'When hit file is a invalid symblic link (2) => null',
-        pathObj: {
-          path: '.',
-          name: symlinkedFiles[3].name,
-          extensions: [symlinkedFiles[3].ext],
-          cwd: symlinkedFiles[3].dir,
-        },
-        defaultObj: {},
-        expected: null,
-      },
-      {
-        name: 'When hit file is a symbolic link of a directory',
-        pathObj: {
-          path: '.',
-          name: symlinkedFiles[4].name,
-          extensions: [symlinkedFiles[4].ext],
-          cwd: symlinkedFiles[4].dir,
-        },
-        defaultObj: {},
-        expected: {
-          path: symlinkedFiles[4].path,
-          extension: symlinkedFiles[4].ext,
-        },
-      },
-      {
-        name: 'When hit file is a symbolic link of a directory (2)',
-        pathObj: {
-          path: '.',
-          name: symlinkedFiles[5].name,
-          extensions: [symlinkedFiles[5].ext],
-          cwd: symlinkedFiles[5].dir,
-        },
-        defaultObj: {},
-        expected: {
-          path: symlinkedFiles[5].path,
-          extension: symlinkedFiles[5].ext,
-        },
-      },
-      {
-        name: 'When finding up a symbolic link file',
-        pathObj: {
-          path: path.basename(symlinkedFiles[0].dir),
-          name: symlinkedFiles[0].name,
-          extensions: [symlinkedFiles[0].ext],
-          cwd: symlinkedFiles[0].dir,
-          findUp: true,
-        },
-        defaultObj: {},
-        expected: {
-          path: symlinkedFiles[0].path,
-          extension: symlinkedFiles[0].ext,
-        },
-      },
-      {
-        name: 'When finding up a symbolic link file (2)',
-        pathObj: {
-          path: path.basename(symlinkedFiles[1].dir),
-          name: symlinkedFiles[1].name,
-          extensions: [symlinkedFiles[1].ext],
-          cwd: symlinkedFiles[1].dir,
-          findUp: true,
-        },
-        defaultObj: {},
-        expected: {
-          path: symlinkedFiles[1].path,
-          extension: symlinkedFiles[1].ext,
-        },
-      },
-      {
-        name: 'When finding up an invalid symbolic link file => null',
-        pathObj: {
-          path: path.basename(symlinkedFiles[2].dir),
-          name: symlinkedFiles[2].name,
-          extensions: [symlinkedFiles[2].ext],
-          cwd: symlinkedFiles[2].dir,
-          findUp: true,
-        },
-        defaultObj: {},
-        expected: null,
-      },
-      {
-        name: 'When finding up an invalid symbolic link file (2) => null',
-        pathObj: {
-          path: path.basename(symlinkedFiles[3].dir),
-          name: symlinkedFiles[3].name,
-          extensions: [symlinkedFiles[3].ext],
-          cwd: symlinkedFiles[3].dir,
-          findUp: true,
-        },
-        defaultObj: {},
-        expected: null,
-      },
-      {
-        name: 'When finding up a symbolic link file to a directory',
-        pathObj: {
-          path: path.basename(symlinkedFiles[4].dir),
-          name: symlinkedFiles[4].name,
-          extensions: [symlinkedFiles[4].ext],
-          cwd: symlinkedFiles[4].dir,
-          findUp: true,
-        },
-        defaultObj: {},
-        expected: {
-          path: symlinkedFiles[4].path,
-          extension: symlinkedFiles[4].ext,
-        },
-      },
-      {
-        name: 'When finding up a symbolic link file to a directory (2)',
-        pathObj: {
-          path: path.basename(symlinkedFiles[5].dir),
-          name: symlinkedFiles[5].name,
-          extensions: [symlinkedFiles[5].ext],
-          cwd: symlinkedFiles[5].dir,
-          findUp: true,
-        },
-        defaultObj: {},
-        expected: {
-          path: symlinkedFiles[5].path,
-          extension: symlinkedFiles[5].ext,
-        },
-      },
-    ],
-  },
-]);
+  it('returns object when target file exists', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined',
+      extensions: ['.json', '.js'],
+    };
+
+    var defaultObj = {
+      name: 'app',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('returns null when target file does not exist', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined',
+      extensions: ['.json', '.js'],
+    };
+
+    var defaultObj = {
+      name: 'aaa',
+      cwd: cwd,
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('normalizes a string as 1st argument to an object', function(done) {
+    var pathObj = 'test/fixtures/fined';
+
+    var defaultObj = {
+      name: 'app',
+      extensions: ['.json', '.js'],
+      cwd: cwd,
+      findUp: false,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('returns null when both arguments are empty', function(done) {
+    var pathObj = {};
+
+    var defaultObj = {};
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('returns null when both arguments are null', function(done) {
+    var pathObj = null;
+
+    var defaultObj = null;
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('returns null when 1st argument is invalid', function(done) {
+    var pathObj = 123;
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      extensions: ['.json', '.js'],
+      cwd: cwd,
+      findUp: false,
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('returns null when both arguments are invalid', function(done) {
+    var pathObj = function() {
+      return {
+        path: 'test/fixtures/fined',
+        name: 'app',
+        extensions: ['.json', '.js'],
+        cwd: cwd,
+        findUp: false,
+      };
+    };
+
+    var defaultObj = true;
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+});
+
+describe('Argument defaulting', function() {
+
+  it('does not default when 2nd argument is empty', function(done) {
+    var pathObj = {
+      name: 'package',
+      path: 'test/fixtures/fined',
+      extensions: ['.json', '.js'],
+      cwd: cwd,
+      findUp: false,
+    };
+
+    var defaultObj = {};
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('defaults all properties when 1st argument is empty', function(done) {
+    var pathObj = {};
+
+    var defaultObj = {
+      name: 'package',
+      path: 'test/fixtures/fined',
+      extensions: ['.json', '.js'],
+      cwd: cwd,
+      findUp: false,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('defaults missing properties in 1st argument', function(done) {
+    var pathObj = {
+      name: 'app',
+      cwd: path.resolve(cwd, 'test'),
+    };
+
+    var defaultObj = {
+      path: 'fixtures/fined',
+      extensions: ['.json', '.js'],
+      findUp: false,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('does not default when both arguments are complete', function(done) {
+    var pathObj = {
+      name: 'README',
+      path: '.',
+      extensions: ['.md', '.txt'],
+      findUp: true,
+      cwd: path.resolve(cwd, 'test/fixtures'),
+    };
+
+    var defaultObj = {
+      path: 'fixtures/fined',
+      extensions: ['.json', '.js'],
+      findUp: false,
+      name: 'app',
+      cwd: path.resolve(cwd, 'test'),
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'README.md'),
+      extension: '.md',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  // TODO: is this correct behavior?
+  it('does not default if 1st argument is null', function(done) {
+    var pathObj = null;
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      extensions: ['.json', '.js'],
+      cwd: cwd,
+      findUp: false,
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('ignores 2nd argument if it is null', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      extensions: ['.json', '.js'],
+      cwd: cwd,
+      findUp: false,
+    };
+
+    var defaultObj = null;
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('ignores 2nd argument if it is invalid', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      extensions: ['.json', '.js'],
+      cwd: cwd,
+      findUp: false,
+    };
+
+    var defaultObj = 123;
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+});
+
+describe('Properties: `path`', function() {
+
+  // TODO: change
+  it('returns null when `path` is null', function(done) {
+    var pathObj = {
+      path: null,
+    };
+
+    var defaultObj = {
+      path: 'fixtures/fined',
+      extensions: ['.json', '.js'],
+      findUp: false,
+      name: 'app',
+      cwd: path.resolve(cwd, 'test'),
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('resolves to cwd + name + extension when `path` is an empty string', function(done) {
+    var pathObj = {
+      path: '',
+    };
+
+    var defaultObj = {
+      extensions: ['.json', '.js'],
+      findUp: false,
+      name: 'package',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'package.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('resolves to cwd when `path` and `name` are empty strings', function(done) {
+    var pathObj = {
+      path: '',
+      name: '',
+    };
+
+    var defaultObj = {
+      extensions: [''],
+      findUp: false,
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('returns null when `path` is an invalid type', function(done) {
+    var pathObj = {
+      path: function noop() {},
+    };
+
+    var defaultObj = {
+      extensions: ['.js', '.json'],
+      findUp: false,
+      name: 'app',
+      cwd: cwd,
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('resolves properly when `path` is a String object', function(done) {
+    var pathObj = {
+      path: new String('test/fixtures/fined'),
+    };
+
+    var defaultObj = {
+      extensions: ['.js', '.json'],
+      findUp: false,
+      name: 'app',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      path: new String('test/fixtures/fined'),
+    };
+
+    var defaultObj2 = {
+      extensions: ['', '.js', '.json'],
+      findUp: false,
+      name: null,
+      cwd: cwd,
+    };
+
+    var expected2 = {
+      path: path.resolve(cwd, 'test/fixtures/fined'),
+      extension: '',
+    };
+
+    var result2 = fined(pathObj2, defaultObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('resolves `~` to homedir', function(done) {
+    // ~
+    var pathObj = {
+      path: '~',
+    };
+
+    var defaultObj = {
+      extensions: [userHomeFile.ext],
+      findUp: false,
+      name: userHomeFile.name,
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: userHomeFile.path,
+      extension: userHomeFile.ext,
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+
+    // ~/xxx
+    var pathObj2 = {
+      path: '~/' + userHomeFile.name,
+    };
+
+    var defaultObj2 = {
+      extensions: [userHomeFile.ext],
+      findUp: false,
+      name: null,
+      cwd: cwd,
+    };
+
+    var expected2 = {
+      path: userHomeFile.path,
+      extension: userHomeFile.ext,
+    };
+
+    var result2 = fined(pathObj2, defaultObj2);
+
+    expect(result2).toEqual(expected2);
+
+    // ~xxx
+    var pathObj3 = {
+      path: '~' + userHomeFile.name,
+    };
+
+    var defaultObj3 = {
+      extensions: [userHomeFile.ext],
+      findUp: false,
+      name: null,
+      cwd: cwd,
+    };
+
+    var expected3 = {
+      path: userHomeFile.path,
+      extension: userHomeFile.ext,
+    };
+
+    var result3 = fined(pathObj3, defaultObj3);
+
+    expect(result3).toEqual(expected3);
+    done();
+  });
+
+  it('resolves `~+` to process.cwd()', function(done) {
+    // ~+
+    var pathObj = {
+      path: '~+',
+    };
+
+    var defaultObj = {
+      extensions: ['.json'],
+      findUp: false,
+      name: 'package',
+      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'package.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+
+    // ~+/xxx
+    var pathObj2 = {
+      path: '~+/package',
+    };
+
+    var defaultObj2 = {
+      extensions: ['.json'],
+      findUp: false,
+      name: '',
+      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+    };
+
+    var expected2 = {
+      path: path.resolve(cwd, 'package.json'),
+      extension: '.json',
+    };
+
+    var result2 = fined(pathObj2, defaultObj2);
+
+    expect(result2).toEqual(expected2);
+
+    // ~+xxx
+    var pathObj3 = {
+      path: '~+package',
+    };
+
+    var defaultObj3 = {
+      extensions: ['.json'],
+      findUp: false,
+      name: '',
+      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+    };
+
+    var expected3 = {
+      path: path.resolve(cwd, 'package.json'),
+      extension: '.json',
+    };
+
+    var result3 = fined(pathObj3, defaultObj3);
+
+    expect(result3).toEqual(expected3);
+    done();
+  });
+
+  it('ignores `cwd` when `path` is absolute', function(done) {
+    var pathObj = {
+      path: cwd,
+      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+    };
+
+    var defaultObj = {
+      extensions: ['.json'],
+      findUp: false,
+      name: 'package',
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'package.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('ignores `cwd` when `path` has a drive letter (Windows only)', function(done) {
+    if (!isWindows) {
+      this.skip();
+      return;
+    }
+
+    var winDrive = cwd.slice(0, 2);
+
+    var pathObj = {
+      path: winDrive + 'test\\fixtures\\fined',
+    };
+
+    var defaultObj = {
+      name: 'app',
+      findUp: false,
+      extensions: ['.js'],
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+});
+
+describe('Properties: `name`', function() {
+
+  it('ignores `name` when null', function(done) {
+    var pathObj = {
+      name: null,
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      extensions: [''],
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('ignores `name` when it is an empty string', function(done) {
+    var pathObj = {
+      name: '',
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      extensions: [''],
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('ignores `name` when it is an invalid type', function(done) {
+    var pathObj = {
+      name: 123,
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      extensions: [''],
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('searches for file with `name` when it is a String object', function(done) {
+    var pathObj = {
+      name: new String('app'),
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      extensions: ['.js'],
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      name: new String('package'),
+    };
+
+    var defaultObj2 = {
+      path: '',
+      extensions: ['.json'],
+      cwd: cwd,
+    };
+
+    var expected2 = {
+      path: path.resolve(cwd, 'package.json'),
+      extension: '.json',
+    };
+
+    var result2 = fined(pathObj2, defaultObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('resolves `name` even when it is a directory', function(done) {
+    var pathObj = {
+      name: 'fined',
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures',
+      extensions: [''],
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures', 'fined'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('resolves `name` when it is an absolute path and `path` is empty', function(done) {
+    var pathObj = {
+      name: path.resolve(cwd, 'test/fixtures/fined/app'),
+    };
+
+    var defaultObj = {
+      path: '',
+      extensions: ['.js'],
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined/app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      name: path.join(userHomeFile.dir, userHomeFile.name),
+    };
+
+    var defaultObj2 = {
+      path: '',
+      extensions: [userHomeFile.ext],
+      cwd: cwd,
+    };
+
+    var expected2 = {
+      path: userHomeFile.path,
+      extension: userHomeFile.ext,
+    };
+
+    var result2 = fined(pathObj2, defaultObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('returns null when `name` is an absolute path but `path` is not empty', function(done) {
+    var pathObj = {
+      name: path.resolve(cwd, 'test/fixtures/fined/app'),
+      path: 'test/fixtures/fined',
+    };
+
+    var defaultObj = {
+      extensions: ['.js'],
+      cwd: cwd,
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('will not expand `~` as part of `name`', function(done) {
+    var pathObj = {
+      name: '~/' + userHomeFile.name,
+    };
+
+    var defaultObj = {
+      path: '',
+      extensions: [userHomeFile.ext],
+      cwd: cwd,
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+});
+
+describe('Properties: `extensions`', function() {
+
+  it('resolves to the extension if it is a string', function(done) {
+    var pathObj = {
+      extensions: '.js',
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('resolves to the first found extension if it is an array', function(done) {
+    var pathObj = {
+      extensions: ['.json', '.txt', '.js'],
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('resolves to the first found extension if it is an object', function(done) {
+    var pathObj = {
+      extensions: {
+        '.json': 1,
+        '.js': 2,
+        '.txt': 3,
+        '.yml': 4,
+      },
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: { '.js': 2 },
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('resolves to the first found extension if multiple match', function(done) {
+    var pathObj = {
+      extensions: ['.json', '.js'],
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'appfile',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      extensions: ['.js', '.json'],
+    };
+
+    var defaultObj2 = {
+      path: 'test/fixtures/fined',
+      name: 'appfile',
+      cwd: cwd,
+    };
+
+    var expected2 = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
+      extension: '.js',
+    };
+
+    var result2 = fined(pathObj2, defaultObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('treats a null value as an empty array', function(done) {
+    var pathObj = {
+      extensions: null,
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures',
+      name: 'fined',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures', 'fined'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('treats an empty string value as an empty array', function(done) {
+    var pathObj = {
+      extensions: '',
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures',
+      name: 'fined',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures', 'fined'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('treats an empty array as an empty array', function(done) {
+    var pathObj = {
+      extensions: [],
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures',
+      name: 'fined',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures', 'fined'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('treats an empty object as an object with only key being an empty string', function(done) {
+    var pathObj = {
+      extensions: {},
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures',
+      name: 'fined',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures', 'fined'),
+      extension: { '': null },
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('treats an invalid type as an empty array', function(done) {
+    var pathObj = {
+      extensions: 123,
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures',
+      name: 'fined',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures', 'fined'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('supports String objects', function(done) {
+    var pathObj = {
+      extensions: [new String('.json'), new String('.js')],
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+
+    var exts = {};
+    exts[new String('.json')] = 1;
+    exts[new String('.js')] = 2;
+
+    var pathObj2 = {
+      extensions: exts,
+    };
+
+    var defaultObj2 = {
+      path: 'test/fixtures/fined',
+      name: 'app',
+      cwd: cwd,
+    };
+
+    var expected2 = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: { '.js': 2 },
+    };
+
+    var result2 = fined(pathObj2, defaultObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+});
+
+describe('Properties: `cwd`', function() {
+
+  it('can be absolute', function(done) {
+    var pathObj = {
+      cwd: path.resolve('.'),
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'appfile',
+      extensions: '.js',
+    };
+
+    var expected = {
+      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('can be relative', function(done) {
+    var pathObj = {
+      cwd: '.',
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'appfile',
+      extensions: '.js',
+    };
+
+    var expected = {
+      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      cwd: 'test/fixtures',
+    };
+
+    var defaultObj2 = {
+      path: 'fined',
+      name: 'appfile',
+      extensions: '.js',
+    };
+
+    var expected2 = {
+      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
+      extension: '.js',
+    };
+
+    var result2 = fined(pathObj2, defaultObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('treats a null value as `.`', function(done) {
+    var pathObj = {
+      cwd: null,
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'appfile',
+      extensions: '.js',
+    };
+
+    var expected = {
+      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('treats an empty string as `.`', function(done) {
+    var pathObj = {
+      cwd: '',
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'appfile',
+      extensions: '.js',
+    };
+
+    var expected = {
+      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('treats an invalid type as `.`', function(done) {
+    var pathObj = {
+      cwd: 123,
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'appfile',
+      extensions: '.js',
+    };
+
+    var expected = {
+      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('supports String objects', function(done) {
+    var pathObj = {
+      cwd: new String(cwd),
+    };
+
+    var defaultObj = {
+      path: 'test/fixtures/fined',
+      name: 'appfile',
+      extensions: '.js',
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined/appfile.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('expands `~` to homedir', function(done) {
+    var pathObj = {
+      cwd: '~',
+    };
+
+    var defaultObj = {
+      path: '',
+      name: userHomeFile.name,
+      extensions: userHomeFile.ext,
+    };
+
+    var expected = {
+      path: userHomeFile.path,
+      extension: userHomeFile.ext,
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+});
+
+describe('Properties: `findUp`', function() {
+
+  it('finds a file up in the tree', function(done) {
+    var pathObj = {
+      path: '',
+      findUp: true,
+    };
+
+    var defaultObj = {
+      name: 'README',
+      extensions: ['.md'],
+      cwd: 'test/fixtures/fined',
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'README.md'),
+      extension: '.md',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('finds a directory up in the tree', function(done) {
+    var pathObj = {
+      path: '',
+      findUp: true,
+    };
+
+    var defaultObj = {
+      name: 'test',
+      extensions: ['.md', ''],
+      cwd: 'fixtures/fined',
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test'),
+      extension: '',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('does not search up the tree if file exists in cwd', function(done) {
+    var pathObj = {
+      path: '',
+      extensions: '.json',
+      findUp: true,
+    };
+
+    var defaultObj = {
+      name: 'package',
+      cwd: 'test/fixtures/fined',
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('does not search up the tree if `path` is absolute', function(done) {
+    var pathObj = {
+      findUp: true,
+      path: path.resolve(cwd, 'test'),
+      extensions: '.md',
+    };
+
+    var defaultObj = {
+      name: 'README',
+      cwd: path.resolve(cwd, 'test'),
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('does not search up the tree if `cwd` has a drive letter (Windows only)', function(done) {
+    if (!isWindows) {
+      this.skip();
+      return;
+    }
+
+    var winDrive = cwd.slice(0, 2);
+
+    var pathObj = {
+      findUp: true,
+      name: 'package',
+      path: '',
+      cwd: winDrive + 'test\\fixtures',
+      extensions: '.json',
+    };
+
+    var defaultObj = {};
+
+    var expected = {
+      path: path.resolve(cwd, 'package.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+});
+
+describe('Symbolic links', function() {
+
+  it('returns symlink path when found link points to a file', function(done) {
+    var pathObj = {
+      path: '.',
+      name: symlinkedFiles[0].name,
+      extensions: [symlinkedFiles[0].ext],
+      cwd: symlinkedFiles[0].dir,
+    };
+
+    var expected = {
+      path: symlinkedFiles[0].path,
+      extension: symlinkedFiles[0].ext,
+    };
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      path: '.',
+      name: symlinkedFiles[1].name,
+      extensions: [symlinkedFiles[1].ext],
+      cwd: symlinkedFiles[1].dir,
+    };
+
+    var expected2 = {
+      path: symlinkedFiles[1].path,
+      extension: symlinkedFiles[1].ext,
+    };
+
+    var result2 = fined(pathObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('returns symlink path when found link points to a directory', function(done) {
+    var pathObj = {
+      path: '.',
+      name: symlinkedFiles[4].name,
+      extensions: [symlinkedFiles[4].ext],
+      cwd: symlinkedFiles[4].dir,
+    };
+
+    var expected = {
+      path: symlinkedFiles[4].path,
+      extension: symlinkedFiles[4].ext,
+    };
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      path: '.',
+      name: symlinkedFiles[5].name,
+      extensions: [symlinkedFiles[5].ext],
+      cwd: symlinkedFiles[5].dir,
+    };
+
+    var expected2 = {
+      path: symlinkedFiles[5].path,
+      extension: symlinkedFiles[5].ext,
+    };
+
+    var result2 = fined(pathObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('returns null when found link is an invalid symlink', function(done) {
+    var pathObj = {
+      path: '.',
+      name: symlinkedFiles[2].name,
+      extensions: [symlinkedFiles[2].ext],
+      cwd: symlinkedFiles[2].dir,
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      path: '.',
+      name: symlinkedFiles[3].name,
+      extensions: [symlinkedFiles[3].ext],
+      cwd: symlinkedFiles[3].dir,
+    };
+
+    var expected2 = null;
+
+    var result2 = fined(pathObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('returns symlink path during findUp when symlink points to a file', function(done) {
+    var pathObj = {
+      path: path.basename(symlinkedFiles[0].dir),
+      name: symlinkedFiles[0].name,
+      extensions: [symlinkedFiles[0].ext],
+      cwd: symlinkedFiles[0].dir,
+      findUp: true,
+    };
+
+    var expected = {
+      path: symlinkedFiles[0].path,
+      extension: symlinkedFiles[0].ext,
+    };
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      path: path.basename(symlinkedFiles[1].dir),
+      name: symlinkedFiles[1].name,
+      extensions: [symlinkedFiles[1].ext],
+      cwd: symlinkedFiles[1].dir,
+      findUp: true,
+    };
+
+    var expected2 = {
+      path: symlinkedFiles[1].path,
+      extension: symlinkedFiles[1].ext,
+    };
+
+    var result2 = fined(pathObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('returns symlink path during findUp when symlink points to a directory', function(done) {
+    var pathObj = {
+      path: path.basename(symlinkedFiles[4].dir),
+      name: symlinkedFiles[4].name,
+      extensions: [symlinkedFiles[4].ext],
+      cwd: symlinkedFiles[4].dir,
+      findUp: true,
+    };
+
+    var expected = {
+      path: symlinkedFiles[4].path,
+      extension: symlinkedFiles[4].ext,
+    };
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      path: path.basename(symlinkedFiles[5].dir),
+      name: symlinkedFiles[5].name,
+      extensions: [symlinkedFiles[5].ext],
+      cwd: symlinkedFiles[5].dir,
+      findUp: true,
+    };
+
+    var expected2 = {
+      path: symlinkedFiles[5].path,
+      extension: symlinkedFiles[5].ext,
+    };
+
+    var result2 = fined(pathObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+
+  it('returns null during findUp when symlink is invalid', function(done) {
+    var pathObj = {
+      path: path.basename(symlinkedFiles[2].dir),
+      name: symlinkedFiles[2].name,
+      extensions: [symlinkedFiles[2].ext],
+      cwd: symlinkedFiles[2].dir,
+      findUp: true,
+    };
+
+    var expected = null;
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+
+    var pathObj2 = {
+      path: path.basename(symlinkedFiles[3].dir),
+      name: symlinkedFiles[3].name,
+      extensions: [symlinkedFiles[3].ext],
+      cwd: symlinkedFiles[3].dir,
+      findUp: true,
+    };
+
+    var expected2 = null;
+
+    var result2 = fined(pathObj2);
+
+    expect(result2).toEqual(expected2);
+    done();
+  });
+});
