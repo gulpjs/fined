@@ -12,6 +12,11 @@ var symlinkedFiles = require('./utils/create-symlinks');
 
 var fined = require('../');
 
+if (isWindows) {
+  // Workaround for differnce between path.resolve(winDrive) and process.cwd()
+  process.chdir(process.cwd());
+}
+
 describe('Basic behaviors', function() {
 
   it('returns object when target file exists', function(done) {
