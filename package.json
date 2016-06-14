@@ -41,8 +41,7 @@
     "istanbul-coveralls": "^1.0.3",
     "jscs": "^2.3.5",
     "jscs-preset-gulp": "^1.0.0",
-    "mocha": "^2.4.5",
-    "testrun": "^0.6.0"
+    "mocha": "^2.4.5"
   },
   "keywords": []
 }
