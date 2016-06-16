@@ -1,3 +1,4 @@
 {
-  "preset": "gulp"
+  "preset": "gulp",
+  "excludeFiles": ["test/fixtures/fined/symlink*"]
 }
