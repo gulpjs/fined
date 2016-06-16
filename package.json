@@ -4,6 +4,7 @@
   "description": "Find a file given a declaration of locations",
   "author": "JS CLI Team (https://github.com/js-cli)",
   "contributors": [
+    "Takayuki Sato <t110000508260@yahoo.co.jp>",
     "Blaine Bublitz <blaine.bublitz@gmail.com>"
   ],
   "repository": "js-cli/fined",
