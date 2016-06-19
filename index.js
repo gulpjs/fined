@@ -22,17 +22,11 @@ function defaults(mainObj, defaultObj) {
 }
 
 function fined(pathObj, defaultObj) {
-  var expandedArr = expandPaths(pathObj, defaultObj);
-  for (var i = 0, n = expandedArr.length; i < n; i++) {
-    var found = findWithExpandedPath(expandedArr[i]);
-    if (found) {
-      return found;
-    }
-  }
-  return null;
+  var expandedPath = expandPath(pathObj, defaultObj);
+  return expandedPath ? findWithExpandedPath(expandedPath) : null;
 }
 
-function expandPaths(pathObj, defaultObj) {
+function expandPath(pathObj, defaultObj) {
   if (!isPlainObject(defaultObj)) {
     defaultObj = {};
   }
@@ -49,7 +43,7 @@ function expandPaths(pathObj, defaultObj) {
 
   var filePath;
   if (!isString(pathObj.path)) {
-    return [];
+    return null;
   }
   // Execution of toString is for a String object.
   if (isString(pathObj.name) && pathObj.name) {
@@ -81,38 +75,47 @@ function expandPaths(pathObj, defaultObj) {
     basedir = path.resolve(parsed.root);
   }
 
-  return extArr.map(function(ext) {
-    ext = ext.toString(); // Execution of toString is for a String object.
-    return {
-      path: filePath + ext,
-      basedir: basedir,
-      findUp: findUp,
-      extension: (extMap ? pick(extMap, ext) : ext),
-    };
-  });
+  return {
+    path: filePath,
+    basedir: basedir,
+    findUp: findUp,
+    extArr: extArr,
+    extMap: extMap,
+  };
 }
 
 function findWithExpandedPath(expanded) {
   var found = expanded.findUp ?
-    findUpFile(expanded.path, expanded.basedir) :
-    findFile(path.resolve(expanded.basedir, expanded.path));
+    findUpFile(expanded.basedir, expanded.path, expanded.extArr) :
+    findFile(expanded.basedir, expanded.path, expanded.extArr);
 
-  return !found ? null : { path: found, extension: expanded.extension };
+  if (!found) {
+    return null;
+  }
+
+  if (expanded.extMap) {
+    found.extension = pick(expanded.extMap, found.extension);
+  }
+  return found;
 }
 
-function findFile(filepath) {
-  try {
-    fs.statSync(filepath);
-    return filepath;
-  } catch (e) {}
+function findFile(basedir, relpath, extArr) {
+  var noExtPath = path.resolve(basedir, relpath);
+  for (var i = 0, n = extArr.length; i < n; i++) {
+    var filepath = noExtPath + extArr[i];
+    try {
+      fs.statSync(filepath);
+      return { path: filepath, extension: extArr[i] };
+    } catch (e) {}
+  }
 
   return null;
 }
 
-function findUpFile(filepath, basedir) {
+function findUpFile(basedir, filepath, extArr) {
   var lastdir;
   do {
-    var found = findFile(path.resolve(basedir, filepath));
+    var found = findFile(basedir, filepath, extArr);
     if (found) {
       return found;
     }

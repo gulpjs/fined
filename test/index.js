@@ -1460,6 +1460,29 @@ describe('Properties: `findUp`', function() {
     expect(result).toEqual(expected);
     done();
   });
+
+  it('does not search up the tree any more if file with another extension candidate exists', function(done) {
+    var pathObj = {
+      findUp: true,
+      path: '.',
+      extensions: ['.js', '.json'],
+    };
+
+    var defaultObj = {
+      name: 'index',
+      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined/index.json'),
+      extension: '.json',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
 });
 
 describe('Symbolic links', function() {
