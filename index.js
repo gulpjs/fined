@@ -3,22 +3,14 @@
 var fs = require('fs');
 var path = require('path');
 
-var isString = require('lodash.isstring');
-var isPlainObject = require('lodash.isplainobject');
-var isEmpty = require('lodash.isempty');
-var pick = require('lodash.pick');
-var assignWith = require('lodash.assignwith');
+var isString = require('./lib/is-string');
+var isPlainObject = require('is-plain-object');
+var pick = require('./lib/pick');
+var defaults = require('./lib/defaults-not-nullish');
 
 var expandTilde = require('expand-tilde');
 var parsePath = require('parse-filepath');
 
-function assignNullish(objValue, srcValue) {
-  return (srcValue == null ? objValue : srcValue);
-}
-
-function defaults(mainObj, defaultObj) {
-  return assignWith({}, defaultObj, mainObj, assignNullish);
-}
 
 function fined(pathObj, defaultObj) {
   var expandedPath = expandPath(pathObj, defaultObj);
@@ -69,6 +61,7 @@ function expandPath(pathObj, defaultObj) {
     filePath = filePath.slice(parsed.root.length);
     findUp = false;
     basedir = parsed.root;
+  /* istanbul ignore if */
   } else if (parsed.root) { // Expanded path has a drive letter on Windows.
     filePath = filePath.slice(parsed.root.length);
     basedir = path.resolve(parsed.root);
@@ -149,7 +142,7 @@ function createExtensionMap(exts) {
     return null;
   }
 
-  if (isEmpty(exts)) {
+  if (!Object.keys(exts).length) {
     return { '': null };
   }
 

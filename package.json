@@ -18,19 +18,15 @@
     "LICENSE"
   ],
   "scripts": {
-    "lint": "eslint . && jscs index.js test/",
+    "lint": "eslint . && jscs .",
     "pretest": "npm run lint",
-    "test": "mocha --async-only",
-    "cover": "istanbul cover _mocha --report lcovonly",
+    "test": "mocha --async-only test test/lib",
+    "cover": "istanbul cover _mocha --report lcovonly test test/lib",
     "coveralls": "npm run cover && istanbul-coveralls"
   },
   "dependencies": {
     "expand-tilde": "^1.2.1",
-    "lodash.assignwith": "^4.0.7",
-    "lodash.isempty": "^4.2.1",
-    "lodash.isplainobject": "^4.0.4",
-    "lodash.isstring": "^4.0.1",
-    "lodash.pick": "^4.2.1",
+    "is-plain-object": "^2.0.3",
     "parse-filepath": "^1.0.1"
   },
   "devDependencies": {
