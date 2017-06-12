@@ -4,7 +4,7 @@
   "description": "Find a file given a declaration of locations",
   "author": "JS CLI Team (https://github.com/js-cli)",
   "contributors": [
-    "Takayuki Sato <t110000508260@yahoo.co.jp>",
+    "Takayuki Sato <sttk.xslet@gmail.com>",
     "Blaine Bublitz <blaine.bublitz@gmail.com>"
   ],
   "repository": "js-cli/fined",
@@ -15,18 +15,22 @@
   "main": "index.js",
   "files": [
     "index.js",
+    "lib",
     "LICENSE"
   ],
   "scripts": {
     "lint": "eslint . && jscs .",
     "pretest": "npm run lint",
-    "test": "mocha --async-only test test/lib",
-    "cover": "istanbul cover _mocha --report lcovonly test test/lib",
+    "test": "mocha --async-only",
+    "cover": "istanbul cover _mocha --report lcovonly",
     "coveralls": "npm run cover && istanbul-coveralls"
   },
   "dependencies": {
     "expand-tilde": "^1.2.1",
+    "filter-values": "^0.4.1",
     "is-plain-object": "^2.0.3",
+    "object.defaults": "^1.1.0",
+    "object.pick": "^1.2.0",
     "parse-filepath": "^1.0.1"
   },
   "devDependencies": {

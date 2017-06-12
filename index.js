@@ -3,11 +3,10 @@
 var fs = require('fs');
 var path = require('path');
 
-var isString = require('./lib/is-string');
 var isPlainObject = require('is-plain-object');
-var pick = require('./lib/pick');
-var defaults = require('./lib/defaults-not-nullish');
-
+var pick = require('object.pick');
+var defaults = require('object.defaults');
+var filterValues = require('filter-values');
 var expandTilde = require('expand-tilde');
 var parsePath = require('parse-filepath');
 
@@ -30,7 +29,7 @@ function expandPath(pathObj, defaultObj) {
     pathObj = {};
   }
 
-  pathObj = defaults(pathObj, defaultObj);
+  pathObj = defaultsNotNullish(pathObj, defaultObj);
 
   var filePath;
   if (!isString(pathObj.path)) {
@@ -147,6 +146,28 @@ function createExtensionMap(exts) {
   }
 
   return exts;
+}
+
+function isString(value) {
+  if (typeof value === 'string') {
+    return true;
+  }
+
+  if (Object.prototype.toString.call(value) === '[object String]') {
+    return true;
+  }
+
+  return false;
+}
+
+function defaultsNotNullish(mainObj, defaultObj) {
+  mainObj = filterValues(mainObj, isNotNullish);
+  defaultObj = filterValues(defaultObj, isNotNullish);
+  return defaults(mainObj, defaultObj);
+}
+
+function isNotNullish(value) {
+  return (value != null);
 }
 
 module.exports = fined;
