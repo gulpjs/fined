@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint max-len:0 */
+
 var os = require('os');
 var path = require('path');
 var expect = require('expect');
@@ -107,8 +109,7 @@ describe('Basic behaviors', function() {
     done();
   });
 
-  it('treats 1st argument as an empty object when it is invalid',
-  function(done) {
+  it('treats 1st argument as an empty object when it is invalid', function(done) {
     var pathObj = 123;
 
     var defaultObj = {
@@ -391,8 +392,7 @@ describe('Properties: `path`', function() {
     done();
   });
 
-  it('resolves to cwd + name + extension when `path` is an empty string',
-  function(done) {
+  it('resolves to cwd + name + extension when `path` is an empty string', function(done) {
     var pathObj = {
       path: '',
     };
@@ -415,8 +415,7 @@ describe('Properties: `path`', function() {
     done();
   });
 
-  it('resolves to cwd when `path` and `name` are empty strings',
-  function(done) {
+  it('resolves to cwd when `path` and `name` are empty strings', function(done) {
     var pathObj = {
       path: '',
       name: '',
@@ -657,8 +656,7 @@ describe('Properties: `path`', function() {
     done();
   });
 
-  it('ignores `cwd` when `path` has a drive letter (Windows only)',
-  function(done) {
+  it('ignores `cwd` when `path` has a drive letter (Windows only)', function(done) {
     if (!isWindows) {
       this.skip();
       return;
@@ -756,8 +754,7 @@ describe('Properties: `name`', function() {
     done();
   });
 
-  it('searches for file with `name` when it is a String object',
-  function(done) {
+  it('searches for file with `name` when it is a String object', function(done) {
     var pathObj = {
       name: new String('app'),
     };
@@ -820,8 +817,7 @@ describe('Properties: `name`', function() {
     done();
   });
 
-  it('resolves `name` when it is an absolute path and `path` is empty',
-  function(done) {
+  it('resolves `name` when it is an absolute path and `path` is empty', function(done) {
     var pathObj = {
       name: path.resolve(cwd, 'test/fixtures/fined/app'),
     };
@@ -862,8 +858,7 @@ describe('Properties: `name`', function() {
     done();
   });
 
-  it('returns null when `name` is an absolute path but `path` is not empty',
-  function(done) {
+  it('returns null when `name` is an absolute path but `path` is not empty', function(done) {
     var pathObj = {
       name: path.resolve(cwd, 'test/fixtures/fined/app'),
       path: 'test/fixtures/fined',
@@ -948,8 +943,7 @@ describe('Properties: `extensions`', function() {
     done();
   });
 
-  it('resolves to the first found extension if it is an object',
-  function(done) {
+  it('resolves to the first found extension if it is an object', function(done) {
     var pathObj = {
       extensions: {
         '.json': 1,
@@ -1083,8 +1077,7 @@ describe('Properties: `extensions`', function() {
     done();
   });
 
-  it('treats an empty object as an object with only key being an empty string',
-  function(done) {
+  it('treats an empty object as an object with only key being an empty string', function(done) {
     var pathObj = {
       extensions: {},
     };
@@ -1441,8 +1434,7 @@ describe('Properties: `findUp`', function() {
     done();
   });
 
-  it('does not search up the tree if `cwd` has a drive letter (Windows only)',
-  function(done) {
+  it('does not search up the tree if `cwd` has a drive letter (Windows only)', function(done) {
     if (!isWindows) {
       this.skip();
       return;
@@ -1471,8 +1463,7 @@ describe('Properties: `findUp`', function() {
     done();
   });
 
-  it('does not search up the tree any more if file with another extension ' +
-  'candidate exists', function(done) {
+  it('does not search up the tree any more if file with another extension candidate exists', function(done) {
     var pathObj = {
       findUp: true,
       path: '.',
@@ -1533,8 +1524,7 @@ describe('Symbolic links', function() {
     done();
   });
 
-  it('returns symlink path when found link points to a directory',
-  function(done) {
+  it('returns symlink path when found link points to a directory', function(done) {
     var pathObj = {
       path: '.',
       name: symlinkedFiles[4].name,
@@ -1598,8 +1588,7 @@ describe('Symbolic links', function() {
     done();
   });
 
-  it('returns symlink path during findUp when symlink points to a file',
-  function(done) {
+  it('returns symlink path during findUp when symlink points to a file', function(done) {
     var pathObj = {
       path: path.basename(symlinkedFiles[0].dir),
       name: symlinkedFiles[0].name,
@@ -1636,8 +1625,7 @@ describe('Symbolic links', function() {
     done();
   });
 
-  it('returns symlink path during findUp when symlink points to a directory',
-  function(done) {
+  it('returns symlink path during findUp when symlink points to a directory', function(done) {
     var pathObj = {
       path: path.basename(symlinkedFiles[4].dir),
       name: symlinkedFiles[4].name,

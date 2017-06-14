@@ -5,7 +5,7 @@ var path = require('path');
 
 var isPlainObject = require('is-plain-object');
 var pick = require('object.pick');
-var defaults = require('object.defaults');
+var defaults = require('object.defaults/immutable');
 var filterValues = require('filter-values');
 var expandTilde = require('expand-tilde');
 var parsePath = require('parse-filepath');
@@ -141,11 +141,15 @@ function createExtensionMap(exts) {
     return null;
   }
 
-  if (!Object.keys(exts).length) {
+  if (isEmpty(exts)) {
     return { '': null };
   }
 
   return exts;
+}
+
+function isEmpty(object) {
+  return !Object.keys(object).length;
 }
 
 function isString(value) {
@@ -161,9 +165,7 @@ function isString(value) {
 }
 
 function defaultsNotNullish(mainObj, defaultObj) {
-  mainObj = filterValues(mainObj, isNotNullish);
-  defaultObj = filterValues(defaultObj, isNotNullish);
-  return defaults(mainObj, defaultObj);
+  return filterValues(defaults(mainObj, defaultObj), isNotNullish);
 }
 
 function isNotNullish(value) {
