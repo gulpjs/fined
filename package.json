@@ -25,7 +25,7 @@
     "coveralls": "npm run cover && istanbul-coveralls"
   },
   "dependencies": {
-    "expand-tilde": "^1.2.1",
+    "expand-tilde": "^2.0.2",
     "filter-values": "^0.4.1",
     "is-plain-object": "^2.0.3",
     "object.defaults": "^1.1.0",
