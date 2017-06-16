@@ -1,7 +1,5 @@
 'use strict';
 
-/* eslint max-len:0 */
-
 var os = require('os');
 var path = require('path');
 var expect = require('expect');
