@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "expand-tilde": "^2.0.2",
-    "filter-values": "^0.4.1",
     "is-plain-object": "^2.0.3",
     "object.defaults": "^1.1.0",
     "object.pick": "^1.2.0",

@@ -6,7 +6,6 @@ var path = require('path');
 var isPlainObject = require('is-plain-object');
 var pick = require('object.pick');
 var defaults = require('object.defaults/immutable');
-var filterValues = require('filter-values');
 var expandTilde = require('expand-tilde');
 var parsePath = require('parse-filepath');
 
@@ -29,7 +28,7 @@ function expandPath(pathObj, defaultObj) {
     pathObj = {};
   }
 
-  pathObj = defaultsNotNullish(pathObj, defaultObj);
+  pathObj = defaults(pathObj, defaultObj);
 
   var filePath;
   if (!isString(pathObj.path)) {
@@ -162,14 +161,6 @@ function isString(value) {
   }
 
   return false;
-}
-
-function defaultsNotNullish(mainObj, defaultObj) {
-  return filterValues(defaults(mainObj, defaultObj), isNotNullish);
-}
-
-function isNotNullish(value) {
-  return (value != null);
 }
 
 module.exports = fined;
