@@ -20,6 +20,6 @@ if (userHomeFiles.length > 0) {
 module.exports = {
   path: userHomeFilePath,
   name: userHomeFileName,
-  ext:  userHomeFileExt,
-  dir:  userHomeFileDir,
+  ext: userHomeFileExt,
+  dir: userHomeFileDir,
 };
