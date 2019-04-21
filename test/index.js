@@ -149,6 +149,105 @@ describe('Basic behaviors', function() {
     expect(result).toEqual(expected);
     done();
   });
+
+  it('accepts paths with extensions already', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined/app.js',
+      cwd: cwd,
+      extensions: ['.json', '.js'],
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('only matches the extension specified in path', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined/appfile.js',
+      cwd: cwd,
+      extensions: ['.json', '.js'],
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('accepts name with extensions already', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined',
+      extensions: ['.json', '.js'],
+    };
+
+    var defaultObj = {
+      name: 'app.js',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('only matches the extension specified in name', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined',
+      extensions: ['.json', '.js'],
+    };
+
+    var defaultObj = {
+      name: 'appfile.js',
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('only ignores the extension at the end of the path', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined/.js/app.js',
+      cwd: cwd,
+      extensions: ['.json', '.js'],
+    };
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined/.js', 'app.js'),
+      extension: '.js',
+    };
+
+    var result = fined(pathObj);
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
 });
 
 describe('Argument defaulting', function() {
