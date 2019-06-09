@@ -6,7 +6,7 @@
 
 # fined
 
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Azure Pipelines Build Status][azure-pipelines-image]][azure-pipelines-url] [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
 
 Find a file given a declaration of locations.
 
@@ -64,18 +64,21 @@ This function returns a plain object which consists of following properties if a
 
 MIT
 
-[downloads-image]: http://img.shields.io/npm/dm/fined.svg
+[downloads-image]: https://img.shields.io/npm/dm/fined.svg
 [npm-url]: https://www.npmjs.com/package/fined
-[npm-image]: http://img.shields.io/npm/v/fined.svg
+[npm-image]: https://img.shields.io/npm/v/fined.svg
+
+[azure-pipelines-url]: https://dev.azure.com/gulpjs/gulp/_build/latest?definitionId=7&branchName=master
+[azure-pipelines-image]: https://dev.azure.com/gulpjs/gulp/_apis/build/status/fined?branchName=master
 
 [travis-url]: https://travis-ci.org/gulpjs/fined
-[travis-image]: http://img.shields.io/travis/gulpjs/fined.svg?label=travis-ci
+[travis-image]: https://img.shields.io/travis/gulpjs/fined.svg?label=travis-ci
 
 [appveyor-url]: https://ci.appveyor.com/project/gulpjs/fined
 [appveyor-image]: https://img.shields.io/appveyor/ci/gulpjs/fined.svg?label=appveyor
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/fined
-[coveralls-image]: http://img.shields.io/coveralls/gulpjs/fined/master.svg
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/fined/master.svg
 
 [gitter-url]: https://gitter.im/gulpjs/gulp
 [gitter-image]: https://badges.gitter.im/gulpjs/gulp.svg

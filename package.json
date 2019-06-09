@@ -2,7 +2,7 @@
   "name": "fined",
   "version": "1.2.0",
   "description": "Find a file given a declaration of locations.",
-  "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
+  "author": "Gulp Team <team@gulpjs.com> (https://gulpjs.com/)",
   "contributors": [
     "Takayuki Sato <sttk.xslet@gmail.com>",
     "Blaine Bublitz <blaine.bublitz@gmail.com>"
@@ -20,9 +20,9 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "mocha --async-only",
-    "cover": "istanbul cover _mocha --report lcovonly",
-    "coveralls": "npm run cover && istanbul-coveralls"
+    "test": "nyc mocha --async-only",
+    "azure-pipelines": "nyc mocha --async-only --reporter xunit -O output=test.xunit",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "expand-tilde": "^2.0.2",
@@ -32,12 +32,12 @@
     "parse-filepath": "^1.0.1"
   },
   "devDependencies": {
-    "eslint": "^2.13.0",
+    "coveralls": "github:phated/node-coveralls#2.x",
+    "eslint": "^2.13.1",
     "eslint-config-gulp": "^3.0.1",
     "expect": "^1.20.2",
-    "istanbul": "^0.4.3",
-    "istanbul-coveralls": "^1.0.3",
-    "mocha": "^3.5.3"
+    "mocha": "^3.5.3",
+    "nyc": "^10.3.2"
   },
   "keywords": [
     "find",
