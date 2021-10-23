@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 
-var isPlainObject = require('is-plain-object');
+var isPlainObject = require('is-plain-object').isPlainObject;
 var pick = require('object.pick');
 var defaults = require('object.defaults/immutable');
 var expandTilde = require('expand-tilde');
@@ -59,8 +59,7 @@ function expandPath(pathObj, defaultObj) {
     filePath = filePath.slice(parsed.root.length);
     findUp = false;
     basedir = parsed.root;
-  /* istanbul ignore if */
-  } else if (parsed.root) { // Expanded path has a drive letter on Windows.
+  } else /* istanbul ignore next */ if (parsed.root) { // Expanded path has a drive letter on Windows.
     filePath = filePath.slice(parsed.root.length);
     basedir = path.resolve(parsed.root);
   }
