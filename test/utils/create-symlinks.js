@@ -19,11 +19,15 @@ if (fs.existsSync(symlinkedFiles[0])) {
 var linkedFiles = [
   { path: 'package.json', type: 'file' },
   { path: 'xxxx', type: 'file' },
-  { path: 'test/', type: 'dir' }
+  { path: 'test/', type: 'dir' },
 ];
 for (var i = 0, n = linkedFiles.length; i < n; i++) {
   var file = linkedFiles[i];
-  fs.symlinkSync(path.resolve(basedir, file.path), symlinkedFiles[i * 2], file.type);
+  fs.symlinkSync(
+    path.resolve(basedir, file.path),
+    symlinkedFiles[i * 2],
+    file.type
+  );
   fs.symlinkSync(symlinkedFiles[i * 2], symlinkedFiles[i * 2 + 1], file.type);
 }
 
