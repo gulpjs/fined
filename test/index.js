@@ -1613,12 +1613,6 @@ describe('Symbolic links', function () {
   });
 
   it('returns symlink path when found link points to a directory', function (done) {
-    // Fail on Windows and Node v10,v11, because of:
-    // https://github.com/nodejs/node/pull/23724
-    if (isWindows && ['v10', 'v11'].includes(process.version.split('.')[0])) {
-      this.skip();
-    }
-
     var pathObj = {
       path: '.',
       name: symlinkedFiles[4].name,
@@ -1720,12 +1714,6 @@ describe('Symbolic links', function () {
   });
 
   it('returns symlink path during findUp when symlink points to a directory', function (done) {
-    // Fail on Windows and Node v10,v11, because of:
-    // https://github.com/nodejs/node/pull/23724
-    if (isWindows && ['v10', 'v11'].includes(process.version.split('.')[0])) {
-      this.skip();
-    }
-
     var pathObj = {
       path: path.basename(symlinkedFiles[4].dir),
       name: symlinkedFiles[4].name,
