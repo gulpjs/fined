@@ -9,7 +9,6 @@ var defaults = require('object.defaults/immutable');
 var expandTilde = require('expand-tilde');
 var parsePath = require('parse-filepath');
 
-
 function fined(pathObj, defaultObj) {
   var expandedPath = expandPath(pathObj, defaultObj);
   return expandedPath ? findWithExpandedPath(expandedPath) : null;
@@ -59,7 +58,8 @@ function expandPath(pathObj, defaultObj) {
     filePath = filePath.slice(parsed.root.length);
     findUp = false;
     basedir = parsed.root;
-  } else /* istanbul ignore next */ if (parsed.root) { // Expanded path has a drive letter on Windows.
+  } /* istanbul ignore next */ else if (parsed.root) {
+    // Expanded path has a drive letter on Windows.
     filePath = filePath.slice(parsed.root.length);
     basedir = path.resolve(parsed.root);
   }
@@ -80,9 +80,9 @@ function expandPath(pathObj, defaultObj) {
 }
 
 function findWithExpandedPath(expanded) {
-  var found = expanded.findUp ?
-    findUpFile(expanded.basedir, expanded.path, expanded.extArr) :
-    findFile(expanded.basedir, expanded.path, expanded.extArr);
+  var found = expanded.findUp
+    ? findUpFile(expanded.basedir, expanded.path, expanded.extArr)
+    : findFile(expanded.basedir, expanded.path, expanded.extArr);
 
   if (!found) {
     return null;
@@ -131,12 +131,12 @@ function createExtensionArray(exts) {
 
   if (Array.isArray(exts)) {
     exts = exts.filter(isString);
-    return (exts.length > 0) ? exts : [''];
+    return exts.length > 0 ? exts : [''];
   }
 
   if (isPlainObject(exts)) {
     exts = Object.keys(exts);
-    return (exts.length > 0) ? exts : [''];
+    return exts.length > 0 ? exts : [''];
   }
 
   return [''];

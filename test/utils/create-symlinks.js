@@ -6,7 +6,7 @@ var path = require('path');
 var dir = path.resolve(__dirname, '../fixtures/fined');
 var basedir = path.resolve(__dirname, '../../');
 
-var symlinkedFiles = [0,1,2,3,4,5].map(function(v, j) {
+var symlinkedFiles = [0, 1, 2, 3, 4, 5].map(function (v, j) {
   return path.resolve(dir, 'symlink' + j + '.json');
 });
 
@@ -22,7 +22,7 @@ for (var i = 0, n = linkedFiles.length; i < n; i++) {
   fs.symlinkSync(symlinkedFiles[i * 2], symlinkedFiles[i * 2 + 1]);
 }
 
-module.exports = symlinkedFiles.map(function(pth) {
+module.exports = symlinkedFiles.map(function (pth) {
   var ext = path.extname(pth);
   return {
     path: pth,
