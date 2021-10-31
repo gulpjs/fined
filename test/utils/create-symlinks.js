@@ -16,10 +16,15 @@ if (fs.existsSync(symlinkedFiles[0])) {
   }
 }
 
-var linkedFiles = ['package.json', 'xxxx', 'test/'];
+var linkedFiles = [
+  { path: 'package.json', type: 'file' },
+  { path: 'xxxx', type: 'file' },
+  { path: 'test/', type: 'dir' }
+];
 for (var i = 0, n = linkedFiles.length; i < n; i++) {
-  fs.symlinkSync(path.resolve(basedir, linkedFiles[i]), symlinkedFiles[i * 2]);
-  fs.symlinkSync(symlinkedFiles[i * 2], symlinkedFiles[i * 2 + 1]);
+  var file = linkedFiles[i];
+  fs.symlinkSync(path.resolve(basedir, file.path), symlinkedFiles[i * 2], file.type);
+  fs.symlinkSync(symlinkedFiles[i * 2], symlinkedFiles[i * 2 + 1], file.type);
 }
 
 module.exports = symlinkedFiles.map(function (pth) {
