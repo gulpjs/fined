@@ -149,43 +149,82 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('accepts paths with extensions already', function (done) {
+  it('don\'t accept paths with extensions already if `extensions` property is not empty', function (done) {
     var pathObj = {
       path: 'test/fixtures/fined/app.js',
       cwd: cwd,
       extensions: ['.json', '.js'],
     };
 
-    var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+    var result = fined(pathObj);
+
+    expect(result).toBeNull();
+    done();
+  });
+
+  it('accepts paths with extensions already if `extensions` property of 1st argument is empty', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined/app.js',
+      cwd: cwd,
+      extensions: '',
     };
 
-    var result = fined(pathObj);
+    var defaultObj = {
+      extensions: ['.json', '.js'],
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined/app.js'),
+      extension: '.js',
+    };
 
     expect(result).toEqual(expected);
     done();
   });
 
-  it('only matches the extension specified in path', function (done) {
+  it('accepts paths with extensions already if `extensions` property of 1st argument is neither nullish, a string, an array nor an object', function(done) {
     var pathObj = {
-      path: 'test/fixtures/fined/appfile.js',
+      path: 'test/fixtures/fined/app.js',
+      cwd: cwd,
+      extensions: false,
+    };
+
+    var defaultObj = {
+      extensions: ['.json', '.js'],
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined/app.js'),
+      extension: '.js',
+    };
+
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('treats path with dots only as a path without an extension if `extensions` property is not emtpy', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined/app.json',
       cwd: cwd,
       extensions: ['.json', '.js'],
     };
 
+    var result = fined(pathObj);
+
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
+      path: path.resolve(cwd, 'test/fixtures/fined/app.json.js'),
       extension: '.js',
     };
-
-    var result = fined(pathObj);
 
     expect(result).toEqual(expected);
     done();
   });
 
-  it('accepts name with extensions already', function (done) {
+  it('don\'t accept name with extensions already if `extensions` property is not empty', function (done) {
     var pathObj = {
       path: 'test/fixtures/fined',
       extensions: ['.json', '.js'],
@@ -196,52 +235,76 @@ describe('Basic behaviors', function () {
       cwd: cwd,
     };
 
-    var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
-    };
-
     var result = fined(pathObj, defaultObj);
 
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
     done();
   });
 
-  it('only matches the extension specified in name', function (done) {
+  it('accepts name with extensions already if `extensions` property is empty', function (done) {
     var pathObj = {
       path: 'test/fixtures/fined',
-      extensions: ['.json', '.js'],
+      extensions: '',
     };
 
     var defaultObj = {
-      name: 'appfile.js',
+      name: 'app.js',
       cwd: cwd,
-    };
-
-    var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
-      extension: '.js',
+      extensions: ['.json', '.js'],
     };
 
     var result = fined(pathObj, defaultObj);
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined/app.js'),
+      extension: '.js',
+    };
 
     expect(result).toEqual(expected);
     done();
   });
 
-  it('only ignores the extension at the end of the path', function (done) {
+  it('accepts name with extensions already if `extensions` property is neither nullish, a string, an array nor an object', function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined/.js/app.js',
+      path: 'test/fixtures/fined',
+      extensions: false,
+    };
+
+    var defaultObj = {
+      name: 'app.js',
       cwd: cwd,
       extensions: ['.json', '.js'],
     };
 
+    var result = fined(pathObj, defaultObj);
+
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined/.js', 'app.js'),
+      path: path.resolve(cwd, 'test/fixtures/fined/app.js'),
       extension: '.js',
     };
 
-    var result = fined(pathObj);
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('treats name with dots only as a name without an extension if `extensions` property is not emtpy', function(done) {
+    var pathObj = {
+      path: 'test/fixtures/fined/',
+      cwd: cwd,
+    };
+
+    var defaultObj = {
+      name: 'app.json',
+      cwd: cwd,
+      extensions: ['.json', '.js'],
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    var expected = {
+      path: path.resolve(cwd, 'test/fixtures/fined/app.json.js'),
+      extension: '.js',
+    };
 
     expect(result).toEqual(expected);
     done();

@@ -64,7 +64,9 @@ function expandPath(pathObj, defaultObj) {
     basedir = path.resolve(parsed.root);
   }
 
-  if (parsed.ext) {
+  var isExtensionEmpty = (extArr.length <= 1 && !extArr[0]);
+
+  if (parsed.ext && isExtensionEmpty) {
     filePath = filePath.slice(0, -parsed.ext.length);
     // This ensures that only the original extension is matched.
     extArr = [parsed.ext];
