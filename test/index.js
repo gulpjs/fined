@@ -19,7 +19,7 @@ if (isWindows) {
 }
 
 describe("Basic behaviors", function () {
-  it("returns object when target file exists", function (done) {
+  it("returns object when target file exists", function () {
     var pathObj = {
       path: "test/fixtures/fined",
       extensions: [".json", ".js"],
@@ -38,10 +38,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("returns null when target file does not exist", function (done) {
+  it("returns null when target file does not exist", function () {
     var pathObj = {
       path: "test/fixtures/fined",
       extensions: [".json", ".js"],
@@ -57,10 +56,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("normalizes a string as 1st argument to an object", function (done) {
+  it("normalizes a string as 1st argument to an object", function () {
     var pathObj = "test/fixtures/fined";
 
     var defaultObj = {
@@ -78,10 +76,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("returns null when both arguments are empty", function (done) {
+  it("returns null when both arguments are empty", function () {
     var pathObj = {};
 
     var defaultObj = {};
@@ -91,10 +88,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("returns null when both arguments are null", function (done) {
+  it("returns null when both arguments are null", function () {
     var pathObj = null;
 
     var defaultObj = null;
@@ -104,10 +100,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("treats 1st argument as an empty object when it is invalid", function (done) {
+  it("treats 1st argument as an empty object when it is invalid", function () {
     var pathObj = 123;
 
     var defaultObj = {
@@ -126,10 +121,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("returns null when both arguments are invalid", function (done) {
+  it("returns null when both arguments are invalid", function () {
     var pathObj = function () {
       return {
         path: "test/fixtures/fined",
@@ -147,10 +141,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("accepts paths with extensions already", function (done) {
+  it("accepts paths with extensions already", function () {
     var pathObj = {
       path: "test/fixtures/fined/app.js",
       cwd: cwd,
@@ -165,10 +158,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("only matches the extension specified in path", function (done) {
+  it("only matches the extension specified in path", function () {
     var pathObj = {
       path: "test/fixtures/fined/appfile.js",
       cwd: cwd,
@@ -183,10 +175,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("accepts name with extensions already", function (done) {
+  it("accepts name with extensions already", function () {
     var pathObj = {
       path: "test/fixtures/fined",
       extensions: [".json", ".js"],
@@ -205,10 +196,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("only matches the extension specified in name", function (done) {
+  it("only matches the extension specified in name", function () {
     var pathObj = {
       path: "test/fixtures/fined",
       extensions: [".json", ".js"],
@@ -227,10 +217,9 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("only ignores the extension at the end of the path", function (done) {
+  it("only ignores the extension at the end of the path", function () {
     var pathObj = {
       path: "test/fixtures/fined/.js/app.js",
       cwd: cwd,
@@ -245,12 +234,11 @@ describe("Basic behaviors", function () {
     var result = fined(pathObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 });
 
 describe("Argument defaulting", function () {
-  it("does not default when 2nd argument is empty", function (done) {
+  it("does not default when 2nd argument is empty", function () {
     var pathObj = {
       name: "package",
       path: "test/fixtures/fined",
@@ -269,10 +257,9 @@ describe("Argument defaulting", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("defaults all properties when 1st argument is empty", function (done) {
+  it("defaults all properties when 1st argument is empty", function () {
     var pathObj = {};
 
     var defaultObj = {
@@ -291,10 +278,9 @@ describe("Argument defaulting", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("defaults missing properties in 1st argument", function (done) {
+  it("defaults missing properties in 1st argument", function () {
     var pathObj = {
       name: "app",
       cwd: path.resolve(cwd, "test"),
@@ -314,10 +300,9 @@ describe("Argument defaulting", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("defaults null properties in the 1st argument", function (done) {
+  it("defaults null properties in the 1st argument", function () {
     var pathObj = {
       name: null,
       path: null,
@@ -342,10 +327,9 @@ describe("Argument defaulting", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("does not default when both arguments are complete", function (done) {
+  it("does not default when both arguments are complete", function () {
     var pathObj = {
       name: "README",
       path: ".",
@@ -370,10 +354,9 @@ describe("Argument defaulting", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("defaults everything if 1st argument is null", function (done) {
+  it("defaults everything if 1st argument is null", function () {
     var pathObj = null;
 
     var defaultObj = {
@@ -392,10 +375,9 @@ describe("Argument defaulting", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("ignores 2nd argument if it is null", function (done) {
+  it("ignores 2nd argument if it is null", function () {
     var pathObj = {
       path: "test/fixtures/fined",
       name: "app",
@@ -414,10 +396,9 @@ describe("Argument defaulting", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("ignores 2nd argument if it is invalid", function (done) {
+  it("ignores 2nd argument if it is invalid", function () {
     var pathObj = {
       path: "test/fixtures/fined",
       name: "app",
@@ -436,12 +417,11 @@ describe("Argument defaulting", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 });
 
 describe("Properties: `path`", function () {
-  it("defaults `path` when it is null", function (done) {
+  it("defaults `path` when it is null", function () {
     var pathObj = {
       path: null,
     };
@@ -462,10 +442,9 @@ describe("Properties: `path`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("returns null when `path` is null after defaulting", function (done) {
+  it("returns null when `path` is null after defaulting", function () {
     var pathObj = {
       path: null,
     };
@@ -483,10 +462,9 @@ describe("Properties: `path`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("resolves to cwd + name + extension when `path` is an empty string", function (done) {
+  it("resolves to cwd + name + extension when `path` is an empty string", function () {
     var pathObj = {
       path: "",
     };
@@ -506,10 +484,9 @@ describe("Properties: `path`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("resolves to cwd when `path` and `name` are empty strings", function (done) {
+  it("resolves to cwd when `path` and `name` are empty strings", function () {
     var pathObj = {
       path: "",
       name: "",
@@ -529,10 +506,9 @@ describe("Properties: `path`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("returns null when `path` is an invalid type", function (done) {
+  it("returns null when `path` is an invalid type", function () {
     var pathObj = {
       path: function noop() {},
     };
@@ -549,10 +525,9 @@ describe("Properties: `path`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("resolves properly when `path` is a String object", function (done) {
+  it("resolves properly when `path` is a String object", function () {
     var pathObj = {
       path: new String("test/fixtures/fined"),
     };
@@ -592,10 +567,9 @@ describe("Properties: `path`", function () {
     var result2 = fined(pathObj2, defaultObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("resolves `~` to homedir", function (done) {
+  it("resolves `~` to homedir", function () {
     // ~
     var pathObj = {
       path: "~",
@@ -658,10 +632,9 @@ describe("Properties: `path`", function () {
     var result3 = fined(pathObj3, defaultObj3);
 
     assert.deepStrictEqual(result3, expected3);
-    done();
   });
 
-  it("resolves `~+` to process.cwd()", function (done) {
+  it("resolves `~+` to process.cwd()", function () {
     // ~+
     var pathObj = {
       path: "~+",
@@ -724,10 +697,9 @@ describe("Properties: `path`", function () {
     var result3 = fined(pathObj3, defaultObj3);
 
     assert.deepStrictEqual(result3, expected3);
-    done();
   });
 
-  it("ignores `cwd` when `path` is absolute", function (done) {
+  it("ignores `cwd` when `path` is absolute", function () {
     var pathObj = {
       path: cwd,
       cwd: path.resolve(cwd, "test/fixtures/fined"),
@@ -747,10 +719,9 @@ describe("Properties: `path`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("ignores `cwd` when `path` has a drive letter (Windows only)", function (done) {
+  it("ignores `cwd` when `path` has a drive letter (Windows only)", function () {
     if (!isWindows) {
       this.skip();
       return;
@@ -776,12 +747,11 @@ describe("Properties: `path`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 });
 
 describe("Properties: `name`", function () {
-  it("ignores `name` when null", function (done) {
+  it("ignores `name` when null", function () {
     var pathObj = {
       name: null,
     };
@@ -800,10 +770,9 @@ describe("Properties: `name`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("ignores `name` when it is an empty string", function (done) {
+  it("ignores `name` when it is an empty string", function () {
     var pathObj = {
       name: "",
     };
@@ -822,10 +791,9 @@ describe("Properties: `name`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("ignores `name` when it is an invalid type", function (done) {
+  it("ignores `name` when it is an invalid type", function () {
     var pathObj = {
       name: 123,
     };
@@ -844,10 +812,9 @@ describe("Properties: `name`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("searches for file with `name` when it is a String object", function (done) {
+  it("searches for file with `name` when it is a String object", function () {
     var pathObj = {
       name: new String("app"),
     };
@@ -885,10 +852,9 @@ describe("Properties: `name`", function () {
     var result2 = fined(pathObj2, defaultObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("resolves `name` even when it is a directory", function (done) {
+  it("resolves `name` even when it is a directory", function () {
     var pathObj = {
       name: "fined",
     };
@@ -907,10 +873,9 @@ describe("Properties: `name`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("resolves `name` when it is an absolute path and `path` is empty", function (done) {
+  it("resolves `name` when it is an absolute path and `path` is empty", function () {
     var pathObj = {
       name: path.resolve(cwd, "test/fixtures/fined/app"),
     };
@@ -948,10 +913,9 @@ describe("Properties: `name`", function () {
     var result2 = fined(pathObj2, defaultObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("returns null when `name` is an absolute path but `path` is not empty", function (done) {
+  it("returns null when `name` is an absolute path but `path` is not empty", function () {
     var pathObj = {
       name: path.resolve(cwd, "test/fixtures/fined/app"),
       path: "test/fixtures/fined",
@@ -967,10 +931,9 @@ describe("Properties: `name`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("will not expand `~` as part of `name`", function (done) {
+  it("will not expand `~` as part of `name`", function () {
     var pathObj = {
       name: "~/" + userHomeFile.name,
     };
@@ -986,12 +949,11 @@ describe("Properties: `name`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 });
 
 describe("Properties: `extensions`", function () {
-  it("resolves to the extension if it is a string", function (done) {
+  it("resolves to the extension if it is a string", function () {
     var pathObj = {
       extensions: ".js",
     };
@@ -1010,10 +972,9 @@ describe("Properties: `extensions`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("resolves to the first found extension if it is an array", function (done) {
+  it("resolves to the first found extension if it is an array", function () {
     var pathObj = {
       extensions: [".json", ".txt", ".js"],
     };
@@ -1032,10 +993,9 @@ describe("Properties: `extensions`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("resolves to the first found extension if it is an object", function (done) {
+  it("resolves to the first found extension if it is an object", function () {
     var pathObj = {
       extensions: {
         ".json": 1,
@@ -1059,10 +1019,9 @@ describe("Properties: `extensions`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("resolves to the first found extension if multiple match", function (done) {
+  it("resolves to the first found extension if multiple match", function () {
     var pathObj = {
       extensions: [".json", ".js"],
     };
@@ -1100,10 +1059,9 @@ describe("Properties: `extensions`", function () {
     var result2 = fined(pathObj2, defaultObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("treats a null value as an empty array", function (done) {
+  it("treats a null value as an empty array", function () {
     var pathObj = {
       extensions: null,
     };
@@ -1122,10 +1080,9 @@ describe("Properties: `extensions`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("treats an empty string value as an empty array", function (done) {
+  it("treats an empty string value as an empty array", function () {
     var pathObj = {
       extensions: "",
     };
@@ -1144,10 +1101,9 @@ describe("Properties: `extensions`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("treats an empty array as an empty array", function (done) {
+  it("treats an empty array as an empty array", function () {
     var pathObj = {
       extensions: [],
     };
@@ -1166,10 +1122,9 @@ describe("Properties: `extensions`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("treats an empty object as an object with only key being an empty string", function (done) {
+  it("treats an empty object as an object with only key being an empty string", function () {
     var pathObj = {
       extensions: {},
     };
@@ -1188,10 +1143,9 @@ describe("Properties: `extensions`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("treats an invalid type as an empty array", function (done) {
+  it("treats an invalid type as an empty array", function () {
     var pathObj = {
       extensions: 123,
     };
@@ -1210,10 +1164,9 @@ describe("Properties: `extensions`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("supports String objects", function (done) {
+  it("supports String objects", function () {
     var pathObj = {
       extensions: [new String(".json"), new String(".js")],
     };
@@ -1255,12 +1208,11 @@ describe("Properties: `extensions`", function () {
     var result2 = fined(pathObj2, defaultObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 });
 
 describe("Properties: `cwd`", function () {
-  it("can be absolute", function (done) {
+  it("can be absolute", function () {
     var pathObj = {
       cwd: path.resolve("."),
     };
@@ -1279,10 +1231,9 @@ describe("Properties: `cwd`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("can be relative", function (done) {
+  it("can be relative", function () {
     var pathObj = {
       cwd: ".",
     };
@@ -1320,10 +1271,9 @@ describe("Properties: `cwd`", function () {
     var result2 = fined(pathObj2, defaultObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("treats a null value as `.`", function (done) {
+  it("treats a null value as `.`", function () {
     var pathObj = {
       cwd: null,
     };
@@ -1342,10 +1292,9 @@ describe("Properties: `cwd`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("treats an empty string as `.`", function (done) {
+  it("treats an empty string as `.`", function () {
     var pathObj = {
       cwd: "",
     };
@@ -1364,10 +1313,9 @@ describe("Properties: `cwd`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("treats an invalid type as `.`", function (done) {
+  it("treats an invalid type as `.`", function () {
     var pathObj = {
       cwd: 123,
     };
@@ -1386,10 +1334,9 @@ describe("Properties: `cwd`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("supports String objects", function (done) {
+  it("supports String objects", function () {
     var pathObj = {
       cwd: new String(cwd),
     };
@@ -1408,10 +1355,9 @@ describe("Properties: `cwd`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("expands `~` to homedir", function (done) {
+  it("expands `~` to homedir", function () {
     var pathObj = {
       cwd: "~",
     };
@@ -1430,12 +1376,11 @@ describe("Properties: `cwd`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 });
 
 describe("Properties: `findUp`", function () {
-  it("finds a file up in the tree", function (done) {
+  it("finds a file up in the tree", function () {
     var pathObj = {
       path: "",
       findUp: true,
@@ -1455,10 +1400,9 @@ describe("Properties: `findUp`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("finds a directory up in the tree", function (done) {
+  it("finds a directory up in the tree", function () {
     var pathObj = {
       path: "",
       findUp: true,
@@ -1478,10 +1422,9 @@ describe("Properties: `findUp`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("does not search up the tree if file exists in cwd", function (done) {
+  it("does not search up the tree if file exists in cwd", function () {
     var pathObj = {
       path: "",
       extensions: ".json",
@@ -1501,10 +1444,9 @@ describe("Properties: `findUp`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("does not search up the tree if `path` is absolute", function (done) {
+  it("does not search up the tree if `path` is absolute", function () {
     var pathObj = {
       findUp: true,
       path: path.resolve(cwd, "test"),
@@ -1521,10 +1463,9 @@ describe("Properties: `findUp`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("does not search up the tree if `cwd` has a drive letter (Windows only)", function (done) {
+  it("does not search up the tree if `cwd` has a drive letter (Windows only)", function () {
     if (!isWindows) {
       this.skip();
       return;
@@ -1550,10 +1491,9 @@ describe("Properties: `findUp`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 
-  it("does not search up the tree any more if file with another extension candidate exists", function (done) {
+  it("does not search up the tree any more if file with another extension candidate exists", function () {
     var pathObj = {
       findUp: true,
       path: ".",
@@ -1573,12 +1513,11 @@ describe("Properties: `findUp`", function () {
     var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
-    done();
   });
 });
 
 describe("Symbolic links", function () {
-  it("returns symlink path when found link points to a file", function (done) {
+  it("returns symlink path when found link points to a file", function () {
     var pathObj = {
       path: ".",
       name: symlinkedFiles[0].name,
@@ -1610,10 +1549,9 @@ describe("Symbolic links", function () {
     var result2 = fined(pathObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("returns symlink path when found link points to a directory", function (done) {
+  it("returns symlink path when found link points to a directory", function () {
     var pathObj = {
       path: ".",
       name: symlinkedFiles[4].name,
@@ -1645,10 +1583,9 @@ describe("Symbolic links", function () {
     var result2 = fined(pathObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("returns null when found link is an invalid symlink", function (done) {
+  it("returns null when found link is an invalid symlink", function () {
     var pathObj = {
       path: ".",
       name: symlinkedFiles[2].name,
@@ -1674,10 +1611,9 @@ describe("Symbolic links", function () {
     var result2 = fined(pathObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("returns symlink path during findUp when symlink points to a file", function (done) {
+  it("returns symlink path during findUp when symlink points to a file", function () {
     var pathObj = {
       path: path.basename(symlinkedFiles[0].dir),
       name: symlinkedFiles[0].name,
@@ -1711,10 +1647,9 @@ describe("Symbolic links", function () {
     var result2 = fined(pathObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("returns symlink path during findUp when symlink points to a directory", function (done) {
+  it("returns symlink path during findUp when symlink points to a directory", function () {
     var pathObj = {
       path: path.basename(symlinkedFiles[4].dir),
       name: symlinkedFiles[4].name,
@@ -1748,10 +1683,9 @@ describe("Symbolic links", function () {
     var result2 = fined(pathObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 
-  it("returns null during findUp when symlink is invalid", function (done) {
+  it("returns null during findUp when symlink is invalid", function () {
     var pathObj = {
       path: path.basename(symlinkedFiles[2].dir),
       name: symlinkedFiles[2].name,
@@ -1779,6 +1713,5 @@ describe("Symbolic links", function () {
     var result2 = fined(pathObj2);
 
     assert.deepStrictEqual(result2, expected2);
-    done();
   });
 });
