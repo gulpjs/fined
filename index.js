@@ -1,13 +1,8 @@
 "use strict";
 
+var os = require("os");
 var fs = require("fs");
 var path = require("path");
-
-var isPlainObject = require("is-plain-object").isPlainObject;
-var pick = require("object.pick");
-var defaults = require("object.defaults/immutable");
-var expandTilde = require("expand-tilde");
-var parsePath = require("parse-filepath");
 
 function fined(pathObj, defaultObj) {
   var expandedPath = expandPath(pathObj, defaultObj);
@@ -15,7 +10,7 @@ function fined(pathObj, defaultObj) {
 }
 
 function expandPath(pathObj, defaultObj) {
-  if (!isPlainObject(defaultObj)) {
+  if (!isObject(defaultObj)) {
     defaultObj = {};
   }
 
@@ -23,7 +18,7 @@ function expandPath(pathObj, defaultObj) {
     pathObj = { path: pathObj };
   }
 
-  if (!isPlainObject(pathObj)) {
+  if (!isObject(pathObj)) {
     pathObj = {};
   }
 
@@ -53,8 +48,8 @@ function expandPath(pathObj, defaultObj) {
 
   var findUp = !!pathObj.findUp;
 
-  var parsed = parsePath(filePath);
-  if (parsed.isAbsolute) {
+  var parsed = path.parse(filePath);
+  if (path.isAbsolute(filePath)) {
     filePath = filePath.slice(parsed.root.length);
     findUp = false;
     basedir = parsed.root;
@@ -101,7 +96,7 @@ function findFile(basedir, relpath, extArr) {
     try {
       fs.statSync(filepath);
       return { path: filepath, extension: extArr[i] };
-    } catch (e) {
+    } catch {
       // Ignore error
     }
   }
@@ -134,7 +129,7 @@ function createExtensionArray(exts) {
     return exts.length > 0 ? exts : [""];
   }
 
-  if (isPlainObject(exts)) {
+  if (isObject(exts)) {
     exts = Object.keys(exts);
     return exts.length > 0 ? exts : [""];
   }
@@ -143,7 +138,7 @@ function createExtensionArray(exts) {
 }
 
 function createExtensionMap(exts) {
-  if (!isPlainObject(exts)) {
+  if (!isObject(exts)) {
     return null;
   }
 
@@ -152,6 +147,23 @@ function createExtensionMap(exts) {
   }
 
   return exts;
+}
+
+function defaults(userObj, defaultObj) {
+  var filteredEntries = Object.entries(userObj).filter(
+    ([_, value]) => value != null,
+  );
+  var filteredObj = Object.fromEntries(filteredEntries);
+  return Object.assign({}, defaultObj, filteredObj);
+}
+
+function pick(map, match) {
+  var entries = Object.entries(map).filter(([key]) => key === match);
+  return Object.fromEntries(entries);
+}
+
+function isObject(obj) {
+  return obj && typeof obj === "object" && !Array.isArray(obj);
 }
 
 function isEmpty(object) {
@@ -168,6 +180,23 @@ function isString(value) {
   }
 
   return false;
+}
+
+/*
+ * Copyright (c) 2015 Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
+function expandTilde(filepath) {
+  var home = os.homedir();
+
+  if (filepath.charCodeAt(0) === 126 /* ~ */) {
+    if (filepath.charCodeAt(1) === 43 /* + */) {
+      return path.join(process.cwd(), filepath.slice(2));
+    }
+    return home ? path.join(home, filepath.slice(1)) : filepath;
+  }
+
+  return filepath;
 }
 
 module.exports = fined;

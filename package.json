@@ -28,13 +28,7 @@
     "pretest": "npm run lint",
     "test": "node --test --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=test/lcov.info \"test/*.js\""
   },
-  "dependencies": {
-    "expand-tilde": "^2.0.2",
-    "is-plain-object": "^5.0.0",
-    "object.defaults": "^1.1.0",
-    "object.pick": "^1.3.0",
-    "parse-filepath": "^1.0.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "10.11.0",
     "eslint-config-gulp": "7.0.0",
