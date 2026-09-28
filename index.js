@@ -3,11 +3,7 @@
 var fs = require("fs");
 var path = require("path");
 
-var isPlainObject = require("is-plain-object").isPlainObject;
-var pick = require("object.pick");
-var defaults = require("object.defaults/immutable");
 var expandTilde = require("expand-tilde");
-var parsePath = require("parse-filepath");
 
 function fined(pathObj, defaultObj) {
   var expandedPath = expandPath(pathObj, defaultObj);
@@ -15,7 +11,7 @@ function fined(pathObj, defaultObj) {
 }
 
 function expandPath(pathObj, defaultObj) {
-  if (!isPlainObject(defaultObj)) {
+  if (!isObject(defaultObj)) {
     defaultObj = {};
   }
 
@@ -23,11 +19,11 @@ function expandPath(pathObj, defaultObj) {
     pathObj = { path: pathObj };
   }
 
-  if (!isPlainObject(pathObj)) {
+  if (!isObject(pathObj)) {
     pathObj = {};
   }
 
-  pathObj = defaults(pathObj, defaultObj);
+  pathObj = Object.assign({}, defaultObj, pathObj);
 
   var filePath;
   if (!isString(pathObj.path)) {
@@ -53,8 +49,8 @@ function expandPath(pathObj, defaultObj) {
 
   var findUp = !!pathObj.findUp;
 
-  var parsed = parsePath(filePath);
-  if (parsed.isAbsolute) {
+  var parsed = path.parse(filePath);
+  if (path.isAbsolute(filePath)) {
     filePath = filePath.slice(parsed.root.length);
     findUp = false;
     basedir = parsed.root;
@@ -134,7 +130,7 @@ function createExtensionArray(exts) {
     return exts.length > 0 ? exts : [""];
   }
 
-  if (isPlainObject(exts)) {
+  if (isObject(exts)) {
     exts = Object.keys(exts);
     return exts.length > 0 ? exts : [""];
   }
@@ -143,15 +139,23 @@ function createExtensionArray(exts) {
 }
 
 function createExtensionMap(exts) {
-  if (!isPlainObject(exts)) {
+  if (!isObject(exts)) {
     return null;
   }
 
   if (isEmpty(exts)) {
-    return { "": null };
+    return new Map([["", null]]);
   }
 
-  return exts;
+  return new Map([Object.entries(exts)]);
+}
+
+function pick(map, match) {
+  return Object.fromEntries(map.entries().filter((key) = keys.includes(match)));
+}
+
+function isObject(obj) {
+  return typeof obj === "object";
 }
 
 function isEmpty(object) {
