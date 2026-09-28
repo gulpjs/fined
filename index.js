@@ -1,9 +1,8 @@
 "use strict";
 
+var os = require("os");
 var fs = require("fs");
 var path = require("path");
-
-var expandTilde = require("expand-tilde");
 
 function fined(pathObj, defaultObj) {
   var expandedPath = expandPath(pathObj, defaultObj);
@@ -180,6 +179,23 @@ function isString(value) {
   }
 
   return false;
+}
+
+/*
+ * Copyright (c) 2015 Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
+function expandTilde(filepath) {
+  var home = os.homedir();
+
+  if (filepath.charCodeAt(0) === 126 /* ~ */) {
+    if (filepath.charCodeAt(1) === 43 /* + */) {
+      return path.join(process.cwd(), filepath.slice(2));
+    }
+    return home ? path.join(home, filepath.slice(1)) : filepath;
+  }
+
+  return filepath;
 }
 
 module.exports = fined;
