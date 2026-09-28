@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://gulpjs.com">
+  <a href="https://gulpjs.com">
     <img height="257" width="114" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png">
   </a>
 </p>
@@ -13,25 +13,25 @@ Find a file given a declaration of locations.
 ## Usage
 
 ```js
-var fined = require('fined');
+var fined = require("fined");
 
-fined({ path: 'path/to/file', extensions: ['.js', '.json'] });
+fined({ path: "path/to/file", extensions: [".js", ".json"] });
 // => { path: '/absolute/path/to/file.js', extension: '.js' }  (if file exists)
 // => null  (if file does not exist)
 
 var opts = {
-  name: '.app',
-  cwd: '.',
+  name: ".app",
+  cwd: ".",
   extensions: {
-    rc: 'default-rc-loader',
-    '.yml': 'default-yml-loader',
+    rc: "default-rc-loader",
+    ".yml": "default-yml-loader",
   },
 };
 
-fined({ path: '.' }, opts);
+fined({ path: "." }, opts);
 // => { path: '/absolute/of/cwd/.app.yml', extension: { '.yml': 'default-yml-loader' } }
 
-fined({ path: '~', extensions: { rc: 'some-special-rc-loader' } }, opts);
+fined({ path: "~", extensions: { rc: "some-special-rc-loader" } }, opts);
 // => { path: '/User/home/.apprc', extension: { 'rc': 'some-special-rc-loader' } }
 ```
 
@@ -59,6 +59,16 @@ This function returns a plain object which consists of following properties if a
 - **path** : an absolute path
 - **extension** : a string or a plain object of extension.
 
+## Strict No LLM / No AI Policy
+
+No LLMs for issues.
+
+No LLMs for patches / pull requests.
+
+No LLMs for comments on the bug tracker, including translation.
+
+English is encouraged, but not required. You are welcome to post in your native language and rely on others to have their own translation tools of choice to interpret your words.
+
 ## License
 
 MIT
@@ -68,9 +78,9 @@ MIT
 [npm-url]: https://www.npmjs.com/package/fined
 [npm-image]: https://img.shields.io/npm/v/fined.svg?style=flat-square
 
-[ci-url]: https://github.com/gulpjs/fined/actions?query=workflow:dev
-[ci-image]: https://img.shields.io/github/workflow/status/gulpjs/fined/dev?style=flat-square
+[ci-url]: https://github.com/gulpjs/fined/actions/workflows/dev.yml
+[ci-image]: https://img.shields.io/github/actions/workflow/status/gulpjs/fined/dev.yml?style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/fined
-[coveralls-image]: https://img.shields.io/coveralls/gulpjs/fined/master.svg
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/fined/main.svg?style=flat-square
 <!-- prettier-ignore-end -->

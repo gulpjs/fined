@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-var fs = require('fs');
-var path = require('path');
-var expandTilde = require('expand-tilde');
+var fs = require("fs");
+var path = require("path");
+var expandTilde = require("expand-tilde");
 
-var userHomeDir = expandTilde('~');
+var userHomeDir = expandTilde("~");
 var userHomeFiles = fs.readdirSync(userHomeDir);
 
 var userHomeFilePath, userHomeFileExt, userHomeFileName, userHomeFileDir;
