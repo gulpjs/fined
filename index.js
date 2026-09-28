@@ -23,7 +23,7 @@ function expandPath(pathObj, defaultObj) {
     pathObj = {};
   }
 
-  pathObj = Object.assign({}, defaultObj, pathObj);
+  pathObj = defaults(pathObj, defaultObj);
 
   var filePath;
   if (!isString(pathObj.path)) {
@@ -150,12 +150,18 @@ function createExtensionMap(exts) {
   return exts;
 }
 
+function defaults(userObj = {}, defaultObj = {}) {
+  var filteredObj = Object.entries(userObj).filter(([_, value]) => value != null);
+  return Object.assign({}, defaultObj, Object.fromEntries(filteredObj));
+}
+
 function pick(map, match) {
-  return Object.fromEntries(Object.entries(map).filter((key) => key === match));
+  var entries = Object.entries(map).filter(([key]) => key === match);
+  return Object.fromEntries(entries);
 }
 
 function isObject(obj) {
-  return typeof obj === "object";
+  return obj && typeof obj === "object" && !Array.isArray(obj);
 }
 
 function isEmpty(object) {
