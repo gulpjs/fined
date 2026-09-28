@@ -1,37 +1,37 @@
-'use strict';
+"use strict";
 
-var os = require('os');
-var path = require('path');
-var expect = require('expect');
+var os = require("os");
+var path = require("path");
+var expect = require("expect");
 
 var cwd = process.cwd();
-var isWindows = os.platform() === 'win32';
+var isWindows = os.platform() === "win32";
 
-var userHomeFile = require('./utils/get-userhome-file');
-var symlinkedFiles = require('./utils/create-symlinks');
+var userHomeFile = require("./utils/get-userhome-file");
+var symlinkedFiles = require("./utils/create-symlinks");
 
-var fined = require('../');
+var fined = require("../");
 
 if (isWindows) {
   // Workaround for differnce between path.resolve(winDrive) and process.cwd()
   process.chdir(process.cwd());
 }
 
-describe('Basic behaviors', function () {
-  it('returns object when target file exists', function (done) {
+describe("Basic behaviors", function () {
+  it("returns object when target file exists", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined',
-      extensions: ['.json', '.js'],
+      path: "test/fixtures/fined",
+      extensions: [".json", ".js"],
     };
 
     var defaultObj = {
-      name: 'app',
+      name: "app",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -40,14 +40,14 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('returns null when target file does not exist', function (done) {
+  it("returns null when target file does not exist", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined',
-      extensions: ['.json', '.js'],
+      path: "test/fixtures/fined",
+      extensions: [".json", ".js"],
     };
 
     var defaultObj = {
-      name: 'aaa',
+      name: "aaa",
       cwd: cwd,
     };
 
@@ -59,19 +59,19 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('normalizes a string as 1st argument to an object', function (done) {
-    var pathObj = 'test/fixtures/fined';
+  it("normalizes a string as 1st argument to an object", function (done) {
+    var pathObj = "test/fixtures/fined";
 
     var defaultObj = {
-      name: 'app',
-      extensions: ['.json', '.js'],
+      name: "app",
+      extensions: [".json", ".js"],
       cwd: cwd,
       findUp: false,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -80,7 +80,7 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('returns null when both arguments are empty', function (done) {
+  it("returns null when both arguments are empty", function (done) {
     var pathObj = {};
 
     var defaultObj = {};
@@ -93,7 +93,7 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('returns null when both arguments are null', function (done) {
+  it("returns null when both arguments are null", function (done) {
     var pathObj = null;
 
     var defaultObj = null;
@@ -106,20 +106,20 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('treats 1st argument as an empty object when it is invalid', function (done) {
+  it("treats 1st argument as an empty object when it is invalid", function (done) {
     var pathObj = 123;
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'app',
-      extensions: ['.json', '.js'],
+      path: "test/fixtures/fined",
+      name: "app",
+      extensions: [".json", ".js"],
       cwd: cwd,
       findUp: false,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -128,12 +128,12 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('returns null when both arguments are invalid', function (done) {
+  it("returns null when both arguments are invalid", function (done) {
     var pathObj = function () {
       return {
-        path: 'test/fixtures/fined',
-        name: 'app',
-        extensions: ['.json', '.js'],
+        path: "test/fixtures/fined",
+        name: "app",
+        extensions: [".json", ".js"],
         cwd: cwd,
         findUp: false,
       };
@@ -149,16 +149,16 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('accepts paths with extensions already', function (done) {
+  it("accepts paths with extensions already", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined/app.js',
+      path: "test/fixtures/fined/app.js",
       cwd: cwd,
-      extensions: ['.json', '.js'],
+      extensions: [".json", ".js"],
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj);
@@ -167,16 +167,16 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('only matches the extension specified in path', function (done) {
+  it("only matches the extension specified in path", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined/appfile.js',
+      path: "test/fixtures/fined/appfile.js",
       cwd: cwd,
-      extensions: ['.json', '.js'],
+      extensions: [".json", ".js"],
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "appfile.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj);
@@ -185,20 +185,20 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('accepts name with extensions already', function (done) {
+  it("accepts name with extensions already", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined',
-      extensions: ['.json', '.js'],
+      path: "test/fixtures/fined",
+      extensions: [".json", ".js"],
     };
 
     var defaultObj = {
-      name: 'app.js',
+      name: "app.js",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -207,20 +207,20 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('only matches the extension specified in name', function (done) {
+  it("only matches the extension specified in name", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined',
-      extensions: ['.json', '.js'],
+      path: "test/fixtures/fined",
+      extensions: [".json", ".js"],
     };
 
     var defaultObj = {
-      name: 'appfile.js',
+      name: "appfile.js",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "appfile.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -229,16 +229,16 @@ describe('Basic behaviors', function () {
     done();
   });
 
-  it('only ignores the extension at the end of the path', function (done) {
+  it("only ignores the extension at the end of the path", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined/.js/app.js',
+      path: "test/fixtures/fined/.js/app.js",
       cwd: cwd,
-      extensions: ['.json', '.js'],
+      extensions: [".json", ".js"],
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined/.js', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined/.js", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj);
@@ -248,12 +248,12 @@ describe('Basic behaviors', function () {
   });
 });
 
-describe('Argument defaulting', function () {
-  it('does not default when 2nd argument is empty', function (done) {
+describe("Argument defaulting", function () {
+  it("does not default when 2nd argument is empty", function (done) {
     var pathObj = {
-      name: 'package',
-      path: 'test/fixtures/fined',
-      extensions: ['.json', '.js'],
+      name: "package",
+      path: "test/fixtures/fined",
+      extensions: [".json", ".js"],
       cwd: cwd,
       findUp: false,
     };
@@ -261,8 +261,8 @@ describe('Argument defaulting', function () {
     var defaultObj = {};
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "test/fixtures/fined", "package.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -271,20 +271,20 @@ describe('Argument defaulting', function () {
     done();
   });
 
-  it('defaults all properties when 1st argument is empty', function (done) {
+  it("defaults all properties when 1st argument is empty", function (done) {
     var pathObj = {};
 
     var defaultObj = {
-      name: 'package',
-      path: 'test/fixtures/fined',
-      extensions: ['.json', '.js'],
+      name: "package",
+      path: "test/fixtures/fined",
+      extensions: [".json", ".js"],
       cwd: cwd,
       findUp: false,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "test/fixtures/fined", "package.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -293,21 +293,21 @@ describe('Argument defaulting', function () {
     done();
   });
 
-  it('defaults missing properties in 1st argument', function (done) {
+  it("defaults missing properties in 1st argument", function (done) {
     var pathObj = {
-      name: 'app',
-      cwd: path.resolve(cwd, 'test'),
+      name: "app",
+      cwd: path.resolve(cwd, "test"),
     };
 
     var defaultObj = {
-      path: 'fixtures/fined',
-      extensions: ['.json', '.js'],
+      path: "fixtures/fined",
+      extensions: [".json", ".js"],
       findUp: false,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -316,7 +316,7 @@ describe('Argument defaulting', function () {
     done();
   });
 
-  it('defaults null properties in the 1st argument', function (done) {
+  it("defaults null properties in the 1st argument", function (done) {
     var pathObj = {
       name: null,
       path: null,
@@ -326,16 +326,16 @@ describe('Argument defaulting', function () {
     };
 
     var defaultObj = {
-      name: 'package',
-      path: 'test/fixtures/fined',
-      extensions: ['.json', '.js'],
+      name: "package",
+      path: "test/fixtures/fined",
+      extensions: [".json", ".js"],
       cwd: cwd,
       findUp: false,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "test/fixtures/fined", "package.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -344,26 +344,26 @@ describe('Argument defaulting', function () {
     done();
   });
 
-  it('does not default when both arguments are complete', function (done) {
+  it("does not default when both arguments are complete", function (done) {
     var pathObj = {
-      name: 'README',
-      path: '.',
-      extensions: ['.md', '.txt'],
+      name: "README",
+      path: ".",
+      extensions: [".md", ".txt"],
       findUp: true,
-      cwd: path.resolve(cwd, 'test/fixtures'),
+      cwd: path.resolve(cwd, "test/fixtures"),
     };
 
     var defaultObj = {
-      path: 'fixtures/fined',
-      extensions: ['.json', '.js'],
+      path: "fixtures/fined",
+      extensions: [".json", ".js"],
       findUp: false,
-      name: 'app',
-      cwd: path.resolve(cwd, 'test'),
+      name: "app",
+      cwd: path.resolve(cwd, "test"),
     };
 
     var expected = {
-      path: path.resolve(cwd, 'README.md'),
-      extension: '.md',
+      path: path.resolve(cwd, "README.md"),
+      extension: ".md",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -372,20 +372,20 @@ describe('Argument defaulting', function () {
     done();
   });
 
-  it('defaults everything if 1st argument is null', function (done) {
+  it("defaults everything if 1st argument is null", function (done) {
     var pathObj = null;
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'app',
-      extensions: ['.json', '.js'],
+      path: "test/fixtures/fined",
+      name: "app",
+      extensions: [".json", ".js"],
       cwd: cwd,
       findUp: false,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -394,11 +394,11 @@ describe('Argument defaulting', function () {
     done();
   });
 
-  it('ignores 2nd argument if it is null', function (done) {
+  it("ignores 2nd argument if it is null", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined',
-      name: 'app',
-      extensions: ['.json', '.js'],
+      path: "test/fixtures/fined",
+      name: "app",
+      extensions: [".json", ".js"],
       cwd: cwd,
       findUp: false,
     };
@@ -406,8 +406,8 @@ describe('Argument defaulting', function () {
     var defaultObj = null;
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -416,11 +416,11 @@ describe('Argument defaulting', function () {
     done();
   });
 
-  it('ignores 2nd argument if it is invalid', function (done) {
+  it("ignores 2nd argument if it is invalid", function (done) {
     var pathObj = {
-      path: 'test/fixtures/fined',
-      name: 'app',
-      extensions: ['.json', '.js'],
+      path: "test/fixtures/fined",
+      name: "app",
+      extensions: [".json", ".js"],
       cwd: cwd,
       findUp: false,
     };
@@ -428,8 +428,8 @@ describe('Argument defaulting', function () {
     var defaultObj = 123;
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -439,23 +439,23 @@ describe('Argument defaulting', function () {
   });
 });
 
-describe('Properties: `path`', function () {
-  it('defaults `path` when it is null', function (done) {
+describe("Properties: `path`", function () {
+  it("defaults `path` when it is null", function (done) {
     var pathObj = {
       path: null,
     };
 
     var defaultObj = {
-      path: 'fixtures/fined',
-      extensions: ['.json', '.js'],
+      path: "fixtures/fined",
+      extensions: [".json", ".js"],
       findUp: false,
-      name: 'app',
-      cwd: path.resolve(cwd, 'test'),
+      name: "app",
+      cwd: path.resolve(cwd, "test"),
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -464,17 +464,17 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('returns null when `path` is null after defaulting', function (done) {
+  it("returns null when `path` is null after defaulting", function (done) {
     var pathObj = {
       path: null,
     };
 
     var defaultObj = {
       path: null,
-      extensions: ['.json', '.js'],
+      extensions: [".json", ".js"],
       findUp: false,
-      name: 'app',
-      cwd: path.resolve(cwd, 'test'),
+      name: "app",
+      cwd: path.resolve(cwd, "test"),
     };
 
     var expected = null;
@@ -485,21 +485,21 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('resolves to cwd + name + extension when `path` is an empty string', function (done) {
+  it("resolves to cwd + name + extension when `path` is an empty string", function (done) {
     var pathObj = {
-      path: '',
+      path: "",
     };
 
     var defaultObj = {
-      extensions: ['.json', '.js'],
+      extensions: [".json", ".js"],
       findUp: false,
-      name: 'package',
+      name: "package",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "package.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -508,21 +508,21 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('resolves to cwd when `path` and `name` are empty strings', function (done) {
+  it("resolves to cwd when `path` and `name` are empty strings", function (done) {
     var pathObj = {
-      path: '',
-      name: '',
+      path: "",
+      name: "",
     };
 
     var defaultObj = {
-      extensions: [''],
+      extensions: [""],
       findUp: false,
       cwd: cwd,
     };
 
     var expected = {
       path: path.resolve(cwd),
-      extension: '',
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -531,15 +531,15 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('returns null when `path` is an invalid type', function (done) {
+  it("returns null when `path` is an invalid type", function (done) {
     var pathObj = {
       path: function noop() {},
     };
 
     var defaultObj = {
-      extensions: ['.js', '.json'],
+      extensions: [".js", ".json"],
       findUp: false,
-      name: 'app',
+      name: "app",
       cwd: cwd,
     };
 
@@ -551,21 +551,21 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('resolves properly when `path` is a String object', function (done) {
+  it("resolves properly when `path` is a String object", function (done) {
     var pathObj = {
-      path: new String('test/fixtures/fined'),
+      path: new String("test/fixtures/fined"),
     };
 
     var defaultObj = {
-      extensions: ['.js', '.json'],
+      extensions: [".js", ".json"],
       findUp: false,
-      name: 'app',
+      name: "app",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -573,19 +573,19 @@ describe('Properties: `path`', function () {
     expect(result).toEqual(expected);
 
     var pathObj2 = {
-      path: new String('test/fixtures/fined'),
+      path: new String("test/fixtures/fined"),
     };
 
     var defaultObj2 = {
-      extensions: ['', '.js', '.json'],
+      extensions: ["", ".js", ".json"],
       findUp: false,
       name: null,
       cwd: cwd,
     };
 
     var expected2 = {
-      path: path.resolve(cwd, 'test/fixtures/fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures/fined"),
+      extension: "",
     };
 
     var result2 = fined(pathObj2, defaultObj2);
@@ -594,10 +594,10 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('resolves `~` to homedir', function (done) {
+  it("resolves `~` to homedir", function (done) {
     // ~
     var pathObj = {
-      path: '~',
+      path: "~",
     };
 
     var defaultObj = {
@@ -618,7 +618,7 @@ describe('Properties: `path`', function () {
 
     // ~/xxx
     var pathObj2 = {
-      path: '~/' + userHomeFile.name,
+      path: "~/" + userHomeFile.name,
     };
 
     var defaultObj2 = {
@@ -639,7 +639,7 @@ describe('Properties: `path`', function () {
 
     // ~xxx
     var pathObj3 = {
-      path: '~' + userHomeFile.name,
+      path: "~" + userHomeFile.name,
     };
 
     var defaultObj3 = {
@@ -660,22 +660,22 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('resolves `~+` to process.cwd()', function (done) {
+  it("resolves `~+` to process.cwd()", function (done) {
     // ~+
     var pathObj = {
-      path: '~+',
+      path: "~+",
     };
 
     var defaultObj = {
-      extensions: ['.json'],
+      extensions: [".json"],
       findUp: false,
-      name: 'package',
-      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+      name: "package",
+      cwd: path.resolve(cwd, "test/fixtures/fined"),
     };
 
     var expected = {
-      path: path.resolve(cwd, 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "package.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -684,19 +684,19 @@ describe('Properties: `path`', function () {
 
     // ~+/xxx
     var pathObj2 = {
-      path: '~+/package',
+      path: "~+/package",
     };
 
     var defaultObj2 = {
-      extensions: ['.json'],
+      extensions: [".json"],
       findUp: false,
-      name: '',
-      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+      name: "",
+      cwd: path.resolve(cwd, "test/fixtures/fined"),
     };
 
     var expected2 = {
-      path: path.resolve(cwd, 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "package.json"),
+      extension: ".json",
     };
 
     var result2 = fined(pathObj2, defaultObj2);
@@ -705,19 +705,19 @@ describe('Properties: `path`', function () {
 
     // ~+xxx
     var pathObj3 = {
-      path: '~+package',
+      path: "~+package",
     };
 
     var defaultObj3 = {
-      extensions: ['.json'],
+      extensions: [".json"],
       findUp: false,
-      name: '',
-      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+      name: "",
+      cwd: path.resolve(cwd, "test/fixtures/fined"),
     };
 
     var expected3 = {
-      path: path.resolve(cwd, 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "package.json"),
+      extension: ".json",
     };
 
     var result3 = fined(pathObj3, defaultObj3);
@@ -726,21 +726,21 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('ignores `cwd` when `path` is absolute', function (done) {
+  it("ignores `cwd` when `path` is absolute", function (done) {
     var pathObj = {
       path: cwd,
-      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+      cwd: path.resolve(cwd, "test/fixtures/fined"),
     };
 
     var defaultObj = {
-      extensions: ['.json'],
+      extensions: [".json"],
       findUp: false,
-      name: 'package',
+      name: "package",
     };
 
     var expected = {
-      path: path.resolve(cwd, 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "package.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -749,7 +749,7 @@ describe('Properties: `path`', function () {
     done();
   });
 
-  it('ignores `cwd` when `path` has a drive letter (Windows only)', function (done) {
+  it("ignores `cwd` when `path` has a drive letter (Windows only)", function (done) {
     if (!isWindows) {
       this.skip();
       return;
@@ -758,18 +758,18 @@ describe('Properties: `path`', function () {
     var winDrive = cwd.slice(0, 2);
 
     var pathObj = {
-      path: winDrive + 'test\\fixtures\\fined',
+      path: winDrive + "test\\fixtures\\fined",
     };
 
     var defaultObj = {
-      name: 'app',
+      name: "app",
       findUp: false,
-      extensions: ['.js'],
+      extensions: [".js"],
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -779,21 +779,21 @@ describe('Properties: `path`', function () {
   });
 });
 
-describe('Properties: `name`', function () {
-  it('ignores `name` when null', function (done) {
+describe("Properties: `name`", function () {
+  it("ignores `name` when null", function (done) {
     var pathObj = {
       name: null,
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      extensions: [''],
+      path: "test/fixtures/fined",
+      extensions: [""],
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures/fined"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -802,20 +802,20 @@ describe('Properties: `name`', function () {
     done();
   });
 
-  it('ignores `name` when it is an empty string', function (done) {
+  it("ignores `name` when it is an empty string", function (done) {
     var pathObj = {
-      name: '',
+      name: "",
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      extensions: [''],
+      path: "test/fixtures/fined",
+      extensions: [""],
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures/fined"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -824,20 +824,20 @@ describe('Properties: `name`', function () {
     done();
   });
 
-  it('ignores `name` when it is an invalid type', function (done) {
+  it("ignores `name` when it is an invalid type", function (done) {
     var pathObj = {
       name: 123,
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      extensions: [''],
+      path: "test/fixtures/fined",
+      extensions: [""],
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures/fined"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -846,20 +846,20 @@ describe('Properties: `name`', function () {
     done();
   });
 
-  it('searches for file with `name` when it is a String object', function (done) {
+  it("searches for file with `name` when it is a String object", function (done) {
     var pathObj = {
-      name: new String('app'),
+      name: new String("app"),
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      extensions: ['.js'],
+      path: "test/fixtures/fined",
+      extensions: [".js"],
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -867,18 +867,18 @@ describe('Properties: `name`', function () {
     expect(result).toEqual(expected);
 
     var pathObj2 = {
-      name: new String('package'),
+      name: new String("package"),
     };
 
     var defaultObj2 = {
-      path: '',
-      extensions: ['.json'],
+      path: "",
+      extensions: [".json"],
       cwd: cwd,
     };
 
     var expected2 = {
-      path: path.resolve(cwd, 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "package.json"),
+      extension: ".json",
     };
 
     var result2 = fined(pathObj2, defaultObj2);
@@ -887,20 +887,20 @@ describe('Properties: `name`', function () {
     done();
   });
 
-  it('resolves `name` even when it is a directory', function (done) {
+  it("resolves `name` even when it is a directory", function (done) {
     var pathObj = {
-      name: 'fined',
+      name: "fined",
     };
 
     var defaultObj = {
-      path: 'test/fixtures',
-      extensions: [''],
+      path: "test/fixtures",
+      extensions: [""],
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures', 'fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures", "fined"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -909,20 +909,20 @@ describe('Properties: `name`', function () {
     done();
   });
 
-  it('resolves `name` when it is an absolute path and `path` is empty', function (done) {
+  it("resolves `name` when it is an absolute path and `path` is empty", function (done) {
     var pathObj = {
-      name: path.resolve(cwd, 'test/fixtures/fined/app'),
+      name: path.resolve(cwd, "test/fixtures/fined/app"),
     };
 
     var defaultObj = {
-      path: '',
-      extensions: ['.js'],
+      path: "",
+      extensions: [".js"],
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined/app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined/app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -934,7 +934,7 @@ describe('Properties: `name`', function () {
     };
 
     var defaultObj2 = {
-      path: '',
+      path: "",
       extensions: [userHomeFile.ext],
       cwd: cwd,
     };
@@ -950,14 +950,14 @@ describe('Properties: `name`', function () {
     done();
   });
 
-  it('returns null when `name` is an absolute path but `path` is not empty', function (done) {
+  it("returns null when `name` is an absolute path but `path` is not empty", function (done) {
     var pathObj = {
-      name: path.resolve(cwd, 'test/fixtures/fined/app'),
-      path: 'test/fixtures/fined',
+      name: path.resolve(cwd, "test/fixtures/fined/app"),
+      path: "test/fixtures/fined",
     };
 
     var defaultObj = {
-      extensions: ['.js'],
+      extensions: [".js"],
       cwd: cwd,
     };
 
@@ -969,13 +969,13 @@ describe('Properties: `name`', function () {
     done();
   });
 
-  it('will not expand `~` as part of `name`', function (done) {
+  it("will not expand `~` as part of `name`", function (done) {
     var pathObj = {
-      name: '~/' + userHomeFile.name,
+      name: "~/" + userHomeFile.name,
     };
 
     var defaultObj = {
-      path: '',
+      path: "",
       extensions: [userHomeFile.ext],
       cwd: cwd,
     };
@@ -989,21 +989,21 @@ describe('Properties: `name`', function () {
   });
 });
 
-describe('Properties: `extensions`', function () {
-  it('resolves to the extension if it is a string', function (done) {
+describe("Properties: `extensions`", function () {
+  it("resolves to the extension if it is a string", function (done) {
     var pathObj = {
-      extensions: '.js',
+      extensions: ".js",
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'app',
+      path: "test/fixtures/fined",
+      name: "app",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1012,20 +1012,20 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('resolves to the first found extension if it is an array', function (done) {
+  it("resolves to the first found extension if it is an array", function (done) {
     var pathObj = {
-      extensions: ['.json', '.txt', '.js'],
+      extensions: [".json", ".txt", ".js"],
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'app',
+      path: "test/fixtures/fined",
+      name: "app",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1034,25 +1034,25 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('resolves to the first found extension if it is an object', function (done) {
+  it("resolves to the first found extension if it is an object", function (done) {
     var pathObj = {
       extensions: {
-        '.json': 1,
-        '.js': 2,
-        '.txt': 3,
-        '.yml': 4,
+        ".json": 1,
+        ".js": 2,
+        ".txt": 3,
+        ".yml": 4,
       },
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'app',
+      path: "test/fixtures/fined",
+      name: "app",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: { '.js': 2 },
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: { ".js": 2 },
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1061,20 +1061,20 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('resolves to the first found extension if multiple match', function (done) {
+  it("resolves to the first found extension if multiple match", function (done) {
     var pathObj = {
-      extensions: ['.json', '.js'],
+      extensions: [".json", ".js"],
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'appfile',
+      path: "test/fixtures/fined",
+      name: "appfile",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "test/fixtures/fined", "appfile.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1082,18 +1082,18 @@ describe('Properties: `extensions`', function () {
     expect(result).toEqual(expected);
 
     var pathObj2 = {
-      extensions: ['.js', '.json'],
+      extensions: [".js", ".json"],
     };
 
     var defaultObj2 = {
-      path: 'test/fixtures/fined',
-      name: 'appfile',
+      path: "test/fixtures/fined",
+      name: "appfile",
       cwd: cwd,
     };
 
     var expected2 = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'appfile.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined", "appfile.js"),
+      extension: ".js",
     };
 
     var result2 = fined(pathObj2, defaultObj2);
@@ -1102,20 +1102,20 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('treats a null value as an empty array', function (done) {
+  it("treats a null value as an empty array", function (done) {
     var pathObj = {
       extensions: null,
     };
 
     var defaultObj = {
-      path: 'test/fixtures',
-      name: 'fined',
+      path: "test/fixtures",
+      name: "fined",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures', 'fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures", "fined"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1124,20 +1124,20 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('treats an empty string value as an empty array', function (done) {
+  it("treats an empty string value as an empty array", function (done) {
     var pathObj = {
-      extensions: '',
+      extensions: "",
     };
 
     var defaultObj = {
-      path: 'test/fixtures',
-      name: 'fined',
+      path: "test/fixtures",
+      name: "fined",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures', 'fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures", "fined"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1146,20 +1146,20 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('treats an empty array as an empty array', function (done) {
+  it("treats an empty array as an empty array", function (done) {
     var pathObj = {
       extensions: [],
     };
 
     var defaultObj = {
-      path: 'test/fixtures',
-      name: 'fined',
+      path: "test/fixtures",
+      name: "fined",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures', 'fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures", "fined"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1168,20 +1168,20 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('treats an empty object as an object with only key being an empty string', function (done) {
+  it("treats an empty object as an object with only key being an empty string", function (done) {
     var pathObj = {
       extensions: {},
     };
 
     var defaultObj = {
-      path: 'test/fixtures',
-      name: 'fined',
+      path: "test/fixtures",
+      name: "fined",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures', 'fined'),
-      extension: { '': null },
+      path: path.resolve(cwd, "test/fixtures", "fined"),
+      extension: { "": null },
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1190,20 +1190,20 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('treats an invalid type as an empty array', function (done) {
+  it("treats an invalid type as an empty array", function (done) {
     var pathObj = {
       extensions: 123,
     };
 
     var defaultObj = {
-      path: 'test/fixtures',
-      name: 'fined',
+      path: "test/fixtures",
+      name: "fined",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures', 'fined'),
-      extension: '',
+      path: path.resolve(cwd, "test/fixtures", "fined"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1212,20 +1212,20 @@ describe('Properties: `extensions`', function () {
     done();
   });
 
-  it('supports String objects', function (done) {
+  it("supports String objects", function (done) {
     var pathObj = {
-      extensions: [new String('.json'), new String('.js')],
+      extensions: [new String(".json"), new String(".js")],
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'app',
+      path: "test/fixtures/fined",
+      name: "app",
       cwd: cwd,
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: new String('.js'),
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: new String(".js"),
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1233,22 +1233,22 @@ describe('Properties: `extensions`', function () {
     expect(result).toEqual(expected);
 
     var exts = {};
-    exts[new String('.json')] = 1;
-    exts[new String('.js')] = 2;
+    exts[new String(".json")] = 1;
+    exts[new String(".js")] = 2;
 
     var pathObj2 = {
       extensions: exts,
     };
 
     var defaultObj2 = {
-      path: 'test/fixtures/fined',
-      name: 'app',
+      path: "test/fixtures/fined",
+      name: "app",
       cwd: cwd,
     };
 
     var expected2 = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'app.js'),
-      extension: { '.js': 2 },
+      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      extension: { ".js": 2 },
     };
 
     var result2 = fined(pathObj2, defaultObj2);
@@ -1258,21 +1258,21 @@ describe('Properties: `extensions`', function () {
   });
 });
 
-describe('Properties: `cwd`', function () {
-  it('can be absolute', function (done) {
+describe("Properties: `cwd`", function () {
+  it("can be absolute", function (done) {
     var pathObj = {
-      cwd: path.resolve('.'),
+      cwd: path.resolve("."),
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'appfile',
-      extensions: '.js',
+      path: "test/fixtures/fined",
+      name: "appfile",
+      extensions: ".js",
     };
 
     var expected = {
-      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-      extension: '.js',
+      path: path.resolve(".", "test/fixtures/fined/appfile.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1281,20 +1281,20 @@ describe('Properties: `cwd`', function () {
     done();
   });
 
-  it('can be relative', function (done) {
+  it("can be relative", function (done) {
     var pathObj = {
-      cwd: '.',
+      cwd: ".",
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'appfile',
-      extensions: '.js',
+      path: "test/fixtures/fined",
+      name: "appfile",
+      extensions: ".js",
     };
 
     var expected = {
-      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-      extension: '.js',
+      path: path.resolve(".", "test/fixtures/fined/appfile.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1302,18 +1302,18 @@ describe('Properties: `cwd`', function () {
     expect(result).toEqual(expected);
 
     var pathObj2 = {
-      cwd: 'test/fixtures',
+      cwd: "test/fixtures",
     };
 
     var defaultObj2 = {
-      path: 'fined',
-      name: 'appfile',
-      extensions: '.js',
+      path: "fined",
+      name: "appfile",
+      extensions: ".js",
     };
 
     var expected2 = {
-      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-      extension: '.js',
+      path: path.resolve(".", "test/fixtures/fined/appfile.js"),
+      extension: ".js",
     };
 
     var result2 = fined(pathObj2, defaultObj2);
@@ -1322,20 +1322,20 @@ describe('Properties: `cwd`', function () {
     done();
   });
 
-  it('treats a null value as `.`', function (done) {
+  it("treats a null value as `.`", function (done) {
     var pathObj = {
       cwd: null,
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'appfile',
-      extensions: '.js',
+      path: "test/fixtures/fined",
+      name: "appfile",
+      extensions: ".js",
     };
 
     var expected = {
-      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-      extension: '.js',
+      path: path.resolve(".", "test/fixtures/fined/appfile.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1344,20 +1344,20 @@ describe('Properties: `cwd`', function () {
     done();
   });
 
-  it('treats an empty string as `.`', function (done) {
+  it("treats an empty string as `.`", function (done) {
     var pathObj = {
-      cwd: '',
+      cwd: "",
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'appfile',
-      extensions: '.js',
+      path: "test/fixtures/fined",
+      name: "appfile",
+      extensions: ".js",
     };
 
     var expected = {
-      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-      extension: '.js',
+      path: path.resolve(".", "test/fixtures/fined/appfile.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1366,20 +1366,20 @@ describe('Properties: `cwd`', function () {
     done();
   });
 
-  it('treats an invalid type as `.`', function (done) {
+  it("treats an invalid type as `.`", function (done) {
     var pathObj = {
       cwd: 123,
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'appfile',
-      extensions: '.js',
+      path: "test/fixtures/fined",
+      name: "appfile",
+      extensions: ".js",
     };
 
     var expected = {
-      path: path.resolve('.', 'test/fixtures/fined/appfile.js'),
-      extension: '.js',
+      path: path.resolve(".", "test/fixtures/fined/appfile.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1388,20 +1388,20 @@ describe('Properties: `cwd`', function () {
     done();
   });
 
-  it('supports String objects', function (done) {
+  it("supports String objects", function (done) {
     var pathObj = {
       cwd: new String(cwd),
     };
 
     var defaultObj = {
-      path: 'test/fixtures/fined',
-      name: 'appfile',
-      extensions: '.js',
+      path: "test/fixtures/fined",
+      name: "appfile",
+      extensions: ".js",
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined/appfile.js'),
-      extension: '.js',
+      path: path.resolve(cwd, "test/fixtures/fined/appfile.js"),
+      extension: ".js",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1410,13 +1410,13 @@ describe('Properties: `cwd`', function () {
     done();
   });
 
-  it('expands `~` to homedir', function (done) {
+  it("expands `~` to homedir", function (done) {
     var pathObj = {
-      cwd: '~',
+      cwd: "~",
     };
 
     var defaultObj = {
-      path: '',
+      path: "",
       name: userHomeFile.name,
       extensions: userHomeFile.ext,
     };
@@ -1433,22 +1433,22 @@ describe('Properties: `cwd`', function () {
   });
 });
 
-describe('Properties: `findUp`', function () {
-  it('finds a file up in the tree', function (done) {
+describe("Properties: `findUp`", function () {
+  it("finds a file up in the tree", function (done) {
     var pathObj = {
-      path: '',
+      path: "",
       findUp: true,
     };
 
     var defaultObj = {
-      name: 'README',
-      extensions: ['.md'],
-      cwd: 'test/fixtures/fined',
+      name: "README",
+      extensions: [".md"],
+      cwd: "test/fixtures/fined",
     };
 
     var expected = {
-      path: path.resolve(cwd, 'README.md'),
-      extension: '.md',
+      path: path.resolve(cwd, "README.md"),
+      extension: ".md",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1457,21 +1457,21 @@ describe('Properties: `findUp`', function () {
     done();
   });
 
-  it('finds a directory up in the tree', function (done) {
+  it("finds a directory up in the tree", function (done) {
     var pathObj = {
-      path: '',
+      path: "",
       findUp: true,
     };
 
     var defaultObj = {
-      name: 'test',
-      extensions: ['.md', ''],
-      cwd: 'fixtures/fined',
+      name: "test",
+      extensions: [".md", ""],
+      cwd: "fixtures/fined",
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test'),
-      extension: '',
+      path: path.resolve(cwd, "test"),
+      extension: "",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1480,21 +1480,21 @@ describe('Properties: `findUp`', function () {
     done();
   });
 
-  it('does not search up the tree if file exists in cwd', function (done) {
+  it("does not search up the tree if file exists in cwd", function (done) {
     var pathObj = {
-      path: '',
-      extensions: '.json',
+      path: "",
+      extensions: ".json",
       findUp: true,
     };
 
     var defaultObj = {
-      name: 'package',
-      cwd: 'test/fixtures/fined',
+      name: "package",
+      cwd: "test/fixtures/fined",
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined', 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "test/fixtures/fined", "package.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1503,16 +1503,16 @@ describe('Properties: `findUp`', function () {
     done();
   });
 
-  it('does not search up the tree if `path` is absolute', function (done) {
+  it("does not search up the tree if `path` is absolute", function (done) {
     var pathObj = {
       findUp: true,
-      path: path.resolve(cwd, 'test'),
-      extensions: '.md',
+      path: path.resolve(cwd, "test"),
+      extensions: ".md",
     };
 
     var defaultObj = {
-      name: 'README',
-      cwd: path.resolve(cwd, 'test'),
+      name: "README",
+      cwd: path.resolve(cwd, "test"),
     };
 
     var expected = null;
@@ -1523,7 +1523,7 @@ describe('Properties: `findUp`', function () {
     done();
   });
 
-  it('does not search up the tree if `cwd` has a drive letter (Windows only)', function (done) {
+  it("does not search up the tree if `cwd` has a drive letter (Windows only)", function (done) {
     if (!isWindows) {
       this.skip();
       return;
@@ -1533,17 +1533,17 @@ describe('Properties: `findUp`', function () {
 
     var pathObj = {
       findUp: true,
-      name: 'package',
-      path: '',
-      cwd: winDrive + 'test\\fixtures',
-      extensions: '.json',
+      name: "package",
+      path: "",
+      cwd: winDrive + "test\\fixtures",
+      extensions: ".json",
     };
 
     var defaultObj = {};
 
     var expected = {
-      path: path.resolve(cwd, 'package.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "package.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1552,21 +1552,21 @@ describe('Properties: `findUp`', function () {
     done();
   });
 
-  it('does not search up the tree any more if file with another extension candidate exists', function (done) {
+  it("does not search up the tree any more if file with another extension candidate exists", function (done) {
     var pathObj = {
       findUp: true,
-      path: '.',
-      extensions: ['.js', '.json'],
+      path: ".",
+      extensions: [".js", ".json"],
     };
 
     var defaultObj = {
-      name: 'index',
-      cwd: path.resolve(cwd, 'test/fixtures/fined'),
+      name: "index",
+      cwd: path.resolve(cwd, "test/fixtures/fined"),
     };
 
     var expected = {
-      path: path.resolve(cwd, 'test/fixtures/fined/index.json'),
-      extension: '.json',
+      path: path.resolve(cwd, "test/fixtures/fined/index.json"),
+      extension: ".json",
     };
 
     var result = fined(pathObj, defaultObj);
@@ -1576,10 +1576,10 @@ describe('Properties: `findUp`', function () {
   });
 });
 
-describe('Symbolic links', function () {
-  it('returns symlink path when found link points to a file', function (done) {
+describe("Symbolic links", function () {
+  it("returns symlink path when found link points to a file", function (done) {
     var pathObj = {
-      path: '.',
+      path: ".",
       name: symlinkedFiles[0].name,
       extensions: [symlinkedFiles[0].ext],
       cwd: symlinkedFiles[0].dir,
@@ -1595,7 +1595,7 @@ describe('Symbolic links', function () {
     expect(result).toEqual(expected);
 
     var pathObj2 = {
-      path: '.',
+      path: ".",
       name: symlinkedFiles[1].name,
       extensions: [symlinkedFiles[1].ext],
       cwd: symlinkedFiles[1].dir,
@@ -1612,9 +1612,9 @@ describe('Symbolic links', function () {
     done();
   });
 
-  it('returns symlink path when found link points to a directory', function (done) {
+  it("returns symlink path when found link points to a directory", function (done) {
     var pathObj = {
-      path: '.',
+      path: ".",
       name: symlinkedFiles[4].name,
       extensions: [symlinkedFiles[4].ext],
       cwd: symlinkedFiles[4].dir,
@@ -1630,7 +1630,7 @@ describe('Symbolic links', function () {
     expect(result).toEqual(expected);
 
     var pathObj2 = {
-      path: '.',
+      path: ".",
       name: symlinkedFiles[5].name,
       extensions: [symlinkedFiles[5].ext],
       cwd: symlinkedFiles[5].dir,
@@ -1647,9 +1647,9 @@ describe('Symbolic links', function () {
     done();
   });
 
-  it('returns null when found link is an invalid symlink', function (done) {
+  it("returns null when found link is an invalid symlink", function (done) {
     var pathObj = {
-      path: '.',
+      path: ".",
       name: symlinkedFiles[2].name,
       extensions: [symlinkedFiles[2].ext],
       cwd: symlinkedFiles[2].dir,
@@ -1662,7 +1662,7 @@ describe('Symbolic links', function () {
     expect(result).toEqual(expected);
 
     var pathObj2 = {
-      path: '.',
+      path: ".",
       name: symlinkedFiles[3].name,
       extensions: [symlinkedFiles[3].ext],
       cwd: symlinkedFiles[3].dir,
@@ -1676,7 +1676,7 @@ describe('Symbolic links', function () {
     done();
   });
 
-  it('returns symlink path during findUp when symlink points to a file', function (done) {
+  it("returns symlink path during findUp when symlink points to a file", function (done) {
     var pathObj = {
       path: path.basename(symlinkedFiles[0].dir),
       name: symlinkedFiles[0].name,
@@ -1713,7 +1713,7 @@ describe('Symbolic links', function () {
     done();
   });
 
-  it('returns symlink path during findUp when symlink points to a directory', function (done) {
+  it("returns symlink path during findUp when symlink points to a directory", function (done) {
     var pathObj = {
       path: path.basename(symlinkedFiles[4].dir),
       name: symlinkedFiles[4].name,
@@ -1750,7 +1750,7 @@ describe('Symbolic links', function () {
     done();
   });
 
-  it('returns null during findUp when symlink is invalid', function (done) {
+  it("returns null during findUp when symlink is invalid", function (done) {
     var pathObj = {
       path: path.basename(symlinkedFiles[2].dir),
       name: symlinkedFiles[2].name,

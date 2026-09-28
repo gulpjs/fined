@@ -13,25 +13,25 @@ Find a file given a declaration of locations.
 ## Usage
 
 ```js
-var fined = require('fined');
+var fined = require("fined");
 
-fined({ path: 'path/to/file', extensions: ['.js', '.json'] });
+fined({ path: "path/to/file", extensions: [".js", ".json"] });
 // => { path: '/absolute/path/to/file.js', extension: '.js' }  (if file exists)
 // => null  (if file does not exist)
 
 var opts = {
-  name: '.app',
-  cwd: '.',
+  name: ".app",
+  cwd: ".",
   extensions: {
-    rc: 'default-rc-loader',
-    '.yml': 'default-yml-loader',
+    rc: "default-rc-loader",
+    ".yml": "default-yml-loader",
   },
 };
 
-fined({ path: '.' }, opts);
+fined({ path: "." }, opts);
 // => { path: '/absolute/of/cwd/.app.yml', extension: { '.yml': 'default-yml-loader' } }
 
-fined({ path: '~', extensions: { rc: 'some-special-rc-loader' } }, opts);
+fined({ path: "~", extensions: { rc: "some-special-rc-loader" } }, opts);
 // => { path: '/User/home/.apprc', extension: { 'rc': 'some-special-rc-loader' } }
 ```
 

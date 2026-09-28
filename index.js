@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-var fs = require('fs');
-var path = require('path');
+var fs = require("fs");
+var path = require("path");
 
-var isPlainObject = require('is-plain-object').isPlainObject;
-var pick = require('object.pick');
-var defaults = require('object.defaults/immutable');
-var expandTilde = require('expand-tilde');
-var parsePath = require('parse-filepath');
+var isPlainObject = require("is-plain-object").isPlainObject;
+var pick = require("object.pick");
+var defaults = require("object.defaults/immutable");
+var expandTilde = require("expand-tilde");
+var parsePath = require("parse-filepath");
 
 function fined(pathObj, defaultObj) {
   var expandedPath = expandPath(pathObj, defaultObj);
@@ -48,7 +48,7 @@ function expandPath(pathObj, defaultObj) {
   var extArr = createExtensionArray(pathObj.extensions);
   var extMap = createExtensionMap(pathObj.extensions);
 
-  var basedir = isString(pathObj.cwd) ? pathObj.cwd.toString() : '.';
+  var basedir = isString(pathObj.cwd) ? pathObj.cwd.toString() : ".";
   basedir = path.resolve(expandTilde(basedir));
 
   var findUp = !!pathObj.findUp;
@@ -131,15 +131,15 @@ function createExtensionArray(exts) {
 
   if (Array.isArray(exts)) {
     exts = exts.filter(isString);
-    return exts.length > 0 ? exts : [''];
+    return exts.length > 0 ? exts : [""];
   }
 
   if (isPlainObject(exts)) {
     exts = Object.keys(exts);
-    return exts.length > 0 ? exts : [''];
+    return exts.length > 0 ? exts : [""];
   }
 
-  return [''];
+  return [""];
 }
 
 function createExtensionMap(exts) {
@@ -148,7 +148,7 @@ function createExtensionMap(exts) {
   }
 
   if (isEmpty(exts)) {
-    return { '': null };
+    return { "": null };
   }
 
   return exts;
@@ -159,11 +159,11 @@ function isEmpty(object) {
 }
 
 function isString(value) {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return true;
   }
 
-  if (Object.prototype.toString.call(value) === '[object String]') {
+  if (Object.prototype.toString.call(value) === "[object String]") {
     return true;
   }
 
