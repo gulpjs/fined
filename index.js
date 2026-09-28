@@ -97,7 +97,7 @@ function findFile(basedir, relpath, extArr) {
     try {
       fs.statSync(filepath);
       return { path: filepath, extension: extArr[i] };
-    } catch (e) {
+    } catch {
       // Ignore error
     }
   }
@@ -151,7 +151,7 @@ function createExtensionMap(exts) {
 }
 
 function pick(map, match) {
-  return Object.fromEntries(map.entries().filter((key) = keys.includes(match)));
+  return Object.fromEntries(map.entries().filter((key) => key === match));
 }
 
 function isObject(obj) {
