@@ -144,14 +144,14 @@ function createExtensionMap(exts) {
   }
 
   if (isEmpty(exts)) {
-    return new Map([["", null]]);
+    return { "": null };
   }
 
-  return new Map([Object.entries(exts)]);
+  return exts;
 }
 
 function pick(map, match) {
-  return Object.fromEntries(map.entries().filter((key) => key === match));
+  return Object.fromEntries(Object.entries(map).filter((key) => key === match));
 }
 
 function isObject(obj) {
