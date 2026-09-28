@@ -149,11 +149,12 @@ function createExtensionMap(exts) {
   return exts;
 }
 
-function defaults(userObj = {}, defaultObj = {}) {
-  var filteredObj = Object.entries(userObj).filter(
+function defaults(userObj, defaultObj) {
+  var filteredEntries = Object.entries(userObj).filter(
     ([_, value]) => value != null,
   );
-  return Object.assign({}, defaultObj, Object.fromEntries(filteredObj));
+  var filteredObj = Object.fromEntries(filteredEntries);
+  return Object.assign({}, defaultObj, filteredObj);
 }
 
 function pick(map, match) {
