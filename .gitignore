@@ -66,3 +66,4 @@ test/fixtures/fined/symlink*
 
 # Test results
 test.xunit
+test/lcov.info
