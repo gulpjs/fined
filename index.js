@@ -151,7 +151,9 @@ function createExtensionMap(exts) {
 }
 
 function defaults(userObj = {}, defaultObj = {}) {
-  var filteredObj = Object.entries(userObj).filter(([_, value]) => value != null);
+  var filteredObj = Object.entries(userObj).filter(
+    ([_, value]) => value != null,
+  );
   return Object.assign({}, defaultObj, Object.fromEntries(filteredObj));
 }
 
