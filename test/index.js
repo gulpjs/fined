@@ -1,7 +1,7 @@
 "use strict";
 
-var os = require("os");
-var path = require("path");
+var os = require("node:os");
+var path = require("node:path");
 var expect = require("expect");
 
 var cwd = process.cwd();

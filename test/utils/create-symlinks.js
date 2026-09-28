@@ -1,7 +1,7 @@
 "use strict";
 
-var fs = require("fs");
-var path = require("path");
+var fs = require("node:fs");
+var path = require("node:path");
 
 var dir = path.resolve(__dirname, "../fixtures/fined");
 var basedir = path.resolve(__dirname, "../../");
