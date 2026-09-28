@@ -721,12 +721,7 @@ describe("Properties: `path`", function () {
     assert.deepStrictEqual(result, expected);
   });
 
-  it("ignores `cwd` when `path` has a drive letter (Windows only)", function () {
-    if (!isWindows) {
-      this.skip();
-      return;
-    }
-
+  it("ignores `cwd` when `path` has a drive letter (Windows only)", { skip: !isWindows }, function () {
     var winDrive = cwd.slice(0, 2);
 
     var pathObj = {
@@ -1465,12 +1460,7 @@ describe("Properties: `findUp`", function () {
     assert.deepStrictEqual(result, expected);
   });
 
-  it("does not search up the tree if `cwd` has a drive letter (Windows only)", function () {
-    if (!isWindows) {
-      this.skip();
-      return;
-    }
-
+  it("does not search up the tree if `cwd` has a drive letter (Windows only)", { skip: !isWindows }, function () {
     var winDrive = cwd.slice(0, 2);
 
     var pathObj = {
