@@ -37,7 +37,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -56,7 +56,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -77,7 +77,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -90,7 +90,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -103,7 +103,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -125,7 +125,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -146,7 +146,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -164,7 +164,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -182,7 +182,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -204,7 +204,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -226,7 +226,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -244,7 +244,7 @@ describe("Basic behaviors", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 });
@@ -268,7 +268,7 @@ describe("Argument defaulting", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -290,7 +290,7 @@ describe("Argument defaulting", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -313,7 +313,7 @@ describe("Argument defaulting", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -341,7 +341,7 @@ describe("Argument defaulting", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -369,7 +369,7 @@ describe("Argument defaulting", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -391,7 +391,7 @@ describe("Argument defaulting", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -413,7 +413,7 @@ describe("Argument defaulting", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -435,7 +435,7 @@ describe("Argument defaulting", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 });
@@ -461,7 +461,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -482,7 +482,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -505,7 +505,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -528,7 +528,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -548,7 +548,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -571,7 +571,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       path: new String("test/fixtures/fined"),
@@ -591,7 +591,7 @@ describe("Properties: `path`", function () {
 
     var result2 = fined(pathObj2, defaultObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -615,7 +615,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     // ~/xxx
     var pathObj2 = {
@@ -636,7 +636,7 @@ describe("Properties: `path`", function () {
 
     var result2 = fined(pathObj2, defaultObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
 
     // ~xxx
     var pathObj3 = {
@@ -657,7 +657,7 @@ describe("Properties: `path`", function () {
 
     var result3 = fined(pathObj3, defaultObj3);
 
-    assert.strictDeepEqual(result3, expected3);
+    assert.deepStrictEqual(result3, expected3);
     done();
   });
 
@@ -681,7 +681,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     // ~+/xxx
     var pathObj2 = {
@@ -702,7 +702,7 @@ describe("Properties: `path`", function () {
 
     var result2 = fined(pathObj2, defaultObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
 
     // ~+xxx
     var pathObj3 = {
@@ -723,7 +723,7 @@ describe("Properties: `path`", function () {
 
     var result3 = fined(pathObj3, defaultObj3);
 
-    assert.strictDeepEqual(result3, expected3);
+    assert.deepStrictEqual(result3, expected3);
     done();
   });
 
@@ -746,7 +746,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -775,7 +775,7 @@ describe("Properties: `path`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 });
@@ -799,7 +799,7 @@ describe("Properties: `name`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -821,7 +821,7 @@ describe("Properties: `name`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -843,7 +843,7 @@ describe("Properties: `name`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -865,7 +865,7 @@ describe("Properties: `name`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       name: new String("package"),
@@ -884,7 +884,7 @@ describe("Properties: `name`", function () {
 
     var result2 = fined(pathObj2, defaultObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -906,7 +906,7 @@ describe("Properties: `name`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -928,7 +928,7 @@ describe("Properties: `name`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       name: path.join(userHomeFile.dir, userHomeFile.name),
@@ -947,7 +947,7 @@ describe("Properties: `name`", function () {
 
     var result2 = fined(pathObj2, defaultObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -966,7 +966,7 @@ describe("Properties: `name`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -985,7 +985,7 @@ describe("Properties: `name`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 });
@@ -1009,7 +1009,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1031,7 +1031,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1058,7 +1058,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1080,7 +1080,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       extensions: [".js", ".json"],
@@ -1099,7 +1099,7 @@ describe("Properties: `extensions`", function () {
 
     var result2 = fined(pathObj2, defaultObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -1121,7 +1121,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1143,7 +1143,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1165,7 +1165,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1187,7 +1187,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1209,7 +1209,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1231,7 +1231,7 @@ describe("Properties: `extensions`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var exts = {};
     exts[new String(".json")] = 1;
@@ -1254,7 +1254,7 @@ describe("Properties: `extensions`", function () {
 
     var result2 = fined(pathObj2, defaultObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 });
@@ -1278,7 +1278,7 @@ describe("Properties: `cwd`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1300,7 +1300,7 @@ describe("Properties: `cwd`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       cwd: "test/fixtures",
@@ -1319,7 +1319,7 @@ describe("Properties: `cwd`", function () {
 
     var result2 = fined(pathObj2, defaultObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -1341,7 +1341,7 @@ describe("Properties: `cwd`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1363,7 +1363,7 @@ describe("Properties: `cwd`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1385,7 +1385,7 @@ describe("Properties: `cwd`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1407,7 +1407,7 @@ describe("Properties: `cwd`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1429,7 +1429,7 @@ describe("Properties: `cwd`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 });
@@ -1454,7 +1454,7 @@ describe("Properties: `findUp`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1477,7 +1477,7 @@ describe("Properties: `findUp`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1500,7 +1500,7 @@ describe("Properties: `findUp`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1520,7 +1520,7 @@ describe("Properties: `findUp`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1549,7 +1549,7 @@ describe("Properties: `findUp`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 
@@ -1572,7 +1572,7 @@ describe("Properties: `findUp`", function () {
 
     var result = fined(pathObj, defaultObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
     done();
   });
 });
@@ -1593,7 +1593,7 @@ describe("Symbolic links", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       path: ".",
@@ -1609,7 +1609,7 @@ describe("Symbolic links", function () {
 
     var result2 = fined(pathObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -1628,7 +1628,7 @@ describe("Symbolic links", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       path: ".",
@@ -1644,7 +1644,7 @@ describe("Symbolic links", function () {
 
     var result2 = fined(pathObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -1660,7 +1660,7 @@ describe("Symbolic links", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       path: ".",
@@ -1673,7 +1673,7 @@ describe("Symbolic links", function () {
 
     var result2 = fined(pathObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -1693,7 +1693,7 @@ describe("Symbolic links", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       path: path.basename(symlinkedFiles[1].dir),
@@ -1710,7 +1710,7 @@ describe("Symbolic links", function () {
 
     var result2 = fined(pathObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -1730,7 +1730,7 @@ describe("Symbolic links", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       path: path.basename(symlinkedFiles[5].dir),
@@ -1747,7 +1747,7 @@ describe("Symbolic links", function () {
 
     var result2 = fined(pathObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 
@@ -1764,7 +1764,7 @@ describe("Symbolic links", function () {
 
     var result = fined(pathObj);
 
-    assert.strictDeepEqual(result, expected);
+    assert.deepStrictEqual(result, expected);
 
     var pathObj2 = {
       path: path.basename(symlinkedFiles[3].dir),
@@ -1778,7 +1778,7 @@ describe("Symbolic links", function () {
 
     var result2 = fined(pathObj2);
 
-    assert.strictDeepEqual(result2, expected2);
+    assert.deepStrictEqual(result2, expected2);
     done();
   });
 });
