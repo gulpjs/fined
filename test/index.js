@@ -721,28 +721,32 @@ describe("Properties: `path`", function () {
     assert.deepStrictEqual(result, expected);
   });
 
-  it("ignores `cwd` when `path` has a drive letter (Windows only)", { skip: !isWindows }, function () {
-    var winDrive = cwd.slice(0, 2);
+  it(
+    "ignores `cwd` when `path` has a drive letter (Windows only)",
+    { skip: !isWindows },
+    function () {
+      var winDrive = cwd.slice(0, 2);
 
-    var pathObj = {
-      path: winDrive + "test\\fixtures\\fined",
-    };
+      var pathObj = {
+        path: winDrive + "test\\fixtures\\fined",
+      };
 
-    var defaultObj = {
-      name: "app",
-      findUp: false,
-      extensions: [".js"],
-    };
+      var defaultObj = {
+        name: "app",
+        findUp: false,
+        extensions: [".js"],
+      };
 
-    var expected = {
-      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
-      extension: ".js",
-    };
+      var expected = {
+        path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+        extension: ".js",
+      };
 
-    var result = fined(pathObj, defaultObj);
+      var result = fined(pathObj, defaultObj);
 
-    assert.deepStrictEqual(result, expected);
-  });
+      assert.deepStrictEqual(result, expected);
+    },
+  );
 });
 
 describe("Properties: `name`", function () {
@@ -1460,28 +1464,32 @@ describe("Properties: `findUp`", function () {
     assert.deepStrictEqual(result, expected);
   });
 
-  it("does not search up the tree if `cwd` has a drive letter (Windows only)", { skip: !isWindows }, function () {
-    var winDrive = cwd.slice(0, 2);
+  it(
+    "does not search up the tree if `cwd` has a drive letter (Windows only)",
+    { skip: !isWindows },
+    function () {
+      var winDrive = cwd.slice(0, 2);
 
-    var pathObj = {
-      findUp: true,
-      name: "package",
-      path: "",
-      cwd: winDrive + "test\\fixtures",
-      extensions: ".json",
-    };
+      var pathObj = {
+        findUp: true,
+        name: "package",
+        path: "",
+        cwd: winDrive + "test\\fixtures",
+        extensions: ".json",
+      };
 
-    var defaultObj = {};
+      var defaultObj = {};
 
-    var expected = {
-      path: path.resolve(cwd, "package.json"),
-      extension: ".json",
-    };
+      var expected = {
+        path: path.resolve(cwd, "package.json"),
+        extension: ".json",
+      };
 
-    var result = fined(pathObj, defaultObj);
+      var result = fined(pathObj, defaultObj);
 
-    assert.deepStrictEqual(result, expected);
-  });
+      assert.deepStrictEqual(result, expected);
+    },
+  );
 
   it("does not search up the tree any more if file with another extension candidate exists", function () {
     var pathObj = {
