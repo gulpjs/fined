@@ -1,7 +1,7 @@
 "use strict";
 
-var os = require("os");
-var path = require("path");
+var os = require("node:os");
+var path = require("node:path");
 var assert = require("node:assert");
 var { describe, it } = require("node:test");
 
