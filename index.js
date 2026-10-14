@@ -53,13 +53,13 @@ function expandPath(pathObj, defaultObj) {
     filePath = filePath.slice(parsed.root.length);
     findUp = false;
     basedir = parsed.root;
-  } /* istanbul ignore next */ else if (parsed.root) {
+  } else if (parsed.root) {
     // Expanded path has a drive letter on Windows.
     filePath = filePath.slice(parsed.root.length);
     basedir = path.resolve(parsed.root);
   }
 
-  if (parsed.ext) {
+  if (parsed.ext && extArr.includes(parsed.ext)) {
     filePath = filePath.slice(0, -parsed.ext.length);
     // This ensures that only the original extension is matched.
     extArr = [parsed.ext];
