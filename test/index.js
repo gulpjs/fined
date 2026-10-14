@@ -143,32 +143,69 @@ describe("Basic behaviors", function () {
     assert.deepStrictEqual(result, expected);
   });
 
-  it("accepts paths with extensions already", function () {
+  it("doesn't accept paths with extensions already if `extensions` property is not empty", function () {
     var pathObj = {
       path: "test/fixtures/fined/app.js",
       cwd: cwd,
       extensions: [".json", ".js"],
     };
 
+    var result = fined(pathObj);
+
+    assert.deepStrictEqual(result, null);
+  });
+
+  it("accepts paths with extensions already if `extensions` property of 1st argument is empty", function () {
+    var pathObj = {
+      path: "test/fixtures/fined/app.js",
+      cwd: cwd,
+      extensions: "",
+    };
+
+    var defaultObj = {
+      extensions: [".json", ".js"],
+    };
+
+    var expected = {
+      path: path.resolve(cwd, "test/fixtures/fined/app.js"),
+      extension: ".js",
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("accepts paths with extensions already if `extensions` property of 1st argument is neither nullish, a string, an array nor an object", function (done) {
+    var pathObj = {
+      path: "test/fixtures/fined/app.js",
+      cwd: cwd,
+      extensions: false,
+    };
+
+    var defaultObj = {
+      extensions: [".json", ".js"],
+    };
+
     var expected = {
       path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
       extension: ".js",
     };
 
-    var result = fined(pathObj);
+    var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
   });
 
-  it("only matches the extension specified in path", function () {
+  it("treats path with dots only as a path without an extension if `extensions` property is not emtpy", function () {
     var pathObj = {
-      path: "test/fixtures/fined/appfile.js",
+      path: "test/fixtures/fined/app.json",
       cwd: cwd,
       extensions: [".json", ".js"],
     };
 
     var expected = {
-      path: path.resolve(cwd, "test/fixtures/fined", "appfile.js"),
+      path: path.resolve(cwd, "test/fixtures/fined/app.json.js"),
       extension: ".js",
     };
 
@@ -177,19 +214,31 @@ describe("Basic behaviors", function () {
     assert.deepStrictEqual(result, expected);
   });
 
-  it("accepts name with extensions already", function () {
+  it("don't accept name with extensions already if `extensions` property is not empty", function () {
     var pathObj = {
       path: "test/fixtures/fined",
       extensions: [".json", ".js"],
+    };
+
+    var result = fined(pathObj);
+
+    assert.deepStrictEqual(result, null);
+  });
+
+  it("accepts name with extensions already if `extensions` property is empty", function () {
+    var pathObj = {
+      path: "test/fixtures/fined",
+      extensions: "",
     };
 
     var defaultObj = {
       name: "app.js",
       cwd: cwd,
+      extensions: [".json", ".js"],
     };
 
     var expected = {
-      path: path.resolve(cwd, "test/fixtures/fined", "app.js"),
+      path: path.resolve(cwd, "test/fixtures/fined/app.js"),
       extension: ".js",
     };
 
@@ -198,19 +247,20 @@ describe("Basic behaviors", function () {
     assert.deepStrictEqual(result, expected);
   });
 
-  it("only matches the extension specified in name", function () {
+  it("accepts name with extensions already if `extensions` property is neither nullish, a string, an array nor an object", function () {
     var pathObj = {
       path: "test/fixtures/fined",
-      extensions: [".json", ".js"],
+      extensions: false,
     };
 
     var defaultObj = {
-      name: "appfile.js",
+      name: "app.js",
       cwd: cwd,
+      extensions: [".json", ".js"],
     };
 
     var expected = {
-      path: path.resolve(cwd, "test/fixtures/fined", "appfile.js"),
+      path: path.resolve(cwd, "test/fixtures/fined/app.js"),
       extension: ".js",
     };
 
@@ -219,19 +269,24 @@ describe("Basic behaviors", function () {
     assert.deepStrictEqual(result, expected);
   });
 
-  it("only ignores the extension at the end of the path", function () {
+  it("treats name with dots only as a name without an extension if `extensions` property is not empty", function () {
     var pathObj = {
-      path: "test/fixtures/fined/.js/app.js",
+      path: "test/fixtures/fined/",
+      cwd: cwd,
+    };
+
+    var defaultObj = {
+      name: "app.json",
       cwd: cwd,
       extensions: [".json", ".js"],
     };
 
     var expected = {
-      path: path.resolve(cwd, "test/fixtures/fined/.js", "app.js"),
+      path: path.resolve(cwd, "test/fixtures/fined/app.json.js"),
       extension: ".js",
     };
 
-    var result = fined(pathObj);
+    var result = fined(pathObj, defaultObj);
 
     assert.deepStrictEqual(result, expected);
   });
