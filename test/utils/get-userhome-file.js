@@ -1,16 +1,16 @@
 "use strict";
 
-var os = require("node:os");
-var fs = require("node:fs");
-var path = require("node:path");
+const os = require("node:os");
+const fs = require("node:fs");
+const path = require("node:path");
 
-var userHomeDir = os.homedir();
-var userHomeFiles = fs.readdirSync(userHomeDir);
+const userHomeDir = os.homedir();
+const userHomeFiles = fs.readdirSync(userHomeDir);
 
-var userHomeFilePath, userHomeFileExt, userHomeFileName, userHomeFileDir;
+let userHomeFilePath, userHomeFileExt, userHomeFileName, userHomeFileDir;
 
 if (userHomeFiles.length > 0) {
-  var filePath = path.resolve(userHomeDir, userHomeFiles[0]);
+  const filePath = path.resolve(userHomeDir, userHomeFiles[0]);
   userHomeFilePath = filePath;
   userHomeFileDir = path.dirname(userHomeFilePath);
   userHomeFileExt = path.extname(userHomeFilePath);

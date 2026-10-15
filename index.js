@@ -1,30 +1,22 @@
 "use strict";
 
-var os = require("node:os");
-var fs = require("node:fs");
-var path = require("node:path");
+const os = require("node:os");
+const fs = require("node:fs");
+const path = require("node:path");
 
 function fined(pathObj, defaultObj) {
-  var expandedPath = expandPath(pathObj, defaultObj);
+  const expandedPath = expandPath(pathObj, defaultObj);
   return expandedPath ? findWithExpandedPath(expandedPath) : null;
 }
 
 function expandPath(pathObj, defaultObj) {
-  if (!isObject(defaultObj)) {
-    defaultObj = {};
-  }
-
   if (isString(pathObj)) {
     pathObj = { path: pathObj };
   }
 
-  if (!isObject(pathObj)) {
-    pathObj = {};
-  }
-
   pathObj = defaults(pathObj, defaultObj);
 
-  var filePath;
+  let filePath;
   if (!isString(pathObj.path)) {
     return null;
   }
@@ -40,15 +32,15 @@ function expandPath(pathObj, defaultObj) {
     filePath = expandTilde(pathObj.path.toString());
   }
 
-  var extArr = createExtensionArray(pathObj.extensions);
-  var extMap = createExtensionMap(pathObj.extensions);
+  let extArr = createExtensionArray(pathObj.extensions);
+  const extMap = createExtensionMap(pathObj.extensions);
 
-  var basedir = isString(pathObj.cwd) ? pathObj.cwd.toString() : ".";
+  let basedir = isString(pathObj.cwd) ? pathObj.cwd.toString() : ".";
   basedir = path.resolve(expandTilde(basedir));
 
-  var findUp = !!pathObj.findUp;
+  let findUp = !!pathObj.findUp;
 
-  var parsed = path.parse(filePath);
+  const parsed = path.parse(filePath);
   if (path.isAbsolute(filePath)) {
     filePath = filePath.slice(parsed.root.length);
     findUp = false;
@@ -75,7 +67,7 @@ function expandPath(pathObj, defaultObj) {
 }
 
 function findWithExpandedPath(expanded) {
-  var found = expanded.findUp
+  const found = expanded.findUp
     ? findUpFile(expanded.basedir, expanded.path, expanded.extArr)
     : findFile(expanded.basedir, expanded.path, expanded.extArr);
 
@@ -90,12 +82,12 @@ function findWithExpandedPath(expanded) {
 }
 
 function findFile(basedir, relpath, extArr) {
-  var noExtPath = path.resolve(basedir, relpath);
-  for (var i = 0, n = extArr.length; i < n; i++) {
-    var filepath = noExtPath + extArr[i];
+  const noExtPath = path.resolve(basedir, relpath);
+  for (const ext of extArr) {
+    const filepath = noExtPath + ext;
     try {
       fs.statSync(filepath);
-      return { path: filepath, extension: extArr[i] };
+      return { path: filepath, extension: ext };
     } catch {
       // Ignore error
     }
@@ -105,9 +97,9 @@ function findFile(basedir, relpath, extArr) {
 }
 
 function findUpFile(basedir, filepath, extArr) {
-  var lastdir;
+  let lastdir;
   do {
-    var found = findFile(basedir, filepath, extArr);
+    const found = findFile(basedir, filepath, extArr);
     if (found) {
       return found;
     }
@@ -150,20 +142,28 @@ function createExtensionMap(exts) {
 }
 
 function defaults(userObj, defaultObj) {
-  var filteredEntries = Object.entries(userObj).filter(
-    ([_, value]) => value != null,
+  if (!isObject(userObj)) {
+    userObj = {};
+  }
+
+  if (!isObject(defaultObj)) {
+    defaultObj = {};
+  }
+
+  const filteredEntries = Object.entries(userObj).filter(
+    ([, value]) => value != null,
   );
-  var filteredObj = Object.fromEntries(filteredEntries);
+  const filteredObj = Object.fromEntries(filteredEntries);
   return Object.assign({}, defaultObj, filteredObj);
 }
 
 function pick(map, match) {
-  var entries = Object.entries(map).filter(([key]) => key === match);
+  const entries = Object.entries(map).filter(([key]) => key === match);
   return Object.fromEntries(entries);
 }
 
-function isObject(obj) {
-  return obj && typeof obj === "object" && !Array.isArray(obj);
+function isObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value);
 }
 
 function isEmpty(object) {
@@ -187,7 +187,7 @@ function isString(value) {
  * Licensed under the MIT license.
  */
 function expandTilde(filepath) {
-  var home = os.homedir();
+  const home = os.homedir();
 
   if (filepath.charCodeAt(0) === 126 /* ~ */) {
     if (filepath.charCodeAt(1) === 43 /* + */) {
