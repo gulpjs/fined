@@ -1,10 +1,8 @@
-"use strict";
+import os from "node:os";
+import fs from "node:fs";
+import path from "node:path";
 
-const os = require("node:os");
-const fs = require("node:fs");
-const path = require("node:path");
-
-function fined(pathObj, defaultObj) {
+export default function fined(pathObj, defaultObj) {
   const expandedPath = expandPath(pathObj, defaultObj);
   return expandedPath ? findWithExpandedPath(expandedPath) : null;
 }
@@ -198,5 +196,3 @@ function expandTilde(filepath) {
 
   return filepath;
 }
-
-module.exports = fined;
