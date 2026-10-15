@@ -1,15 +1,13 @@
-"use strict";
+import os from "node:os";
+import fs from "node:fs";
+import path from "node:path";
+import assert from "node:assert";
+import { describe, it, before, after } from "node:test";
 
-const os = require("node:os");
-const fs = require("node:fs");
-const path = require("node:path");
-const assert = require("node:assert");
-const { describe, it, before, after } = require("node:test");
+import fined from "../index.js";
 
 const cwd = process.cwd();
 const isWindows = os.platform() === "win32";
-
-const fined = require("../");
 
 if (isWindows) {
   // Workaround for difference between path.resolve(winDrive) and process.cwd()
@@ -19,7 +17,7 @@ if (isWindows) {
 const userHomeFilePath = path.join(os.homedir(), "gulpjs-fined-test.js");
 const userHomeFile = path.parse(userHomeFilePath);
 
-const fixtures = path.join(__dirname, "fixtures/fined");
+const fixtures = path.join(import.meta.dirname, "fixtures/fined");
 const symlinks = [
   {
     from: path.join(fixtures, "package.json"),

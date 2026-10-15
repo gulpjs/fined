@@ -13,7 +13,7 @@ Find a file given a declaration of locations.
 ## Usage
 
 ```js
-const fined = require("fined");
+import fined from "fined";
 
 fined({ path: "path/to/file", extensions: [".js", ".json"] });
 // => { path: '/absolute/path/to/file.js', extension: '.js' }  (if file exists)
