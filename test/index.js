@@ -235,6 +235,80 @@ describe("Basic behaviors", function () {
 
     assert.deepStrictEqual(result, expected);
   });
+
+  it("appends extensions to path if path contains an extension not in the extensions array", function () {
+    var pathObj = {
+      path: "test/fixtures/fined/app.config",
+    };
+
+    var defaultObj = {
+      cwd: cwd,
+      extensions: [".json", ".js"],
+    };
+
+    var expected = {
+      path: path.resolve(cwd, "test/fixtures/fined/app.config.js"),
+      extension: ".js",
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("appends extensions to name if name contains an extension not in the extensions array", function () {
+    var pathObj = {
+      path: "test/fixtures/fined",
+      name: "app.config",
+    };
+
+    var defaultObj = {
+      cwd: cwd,
+      extensions: [".json", ".js"],
+    };
+
+    var expected = {
+      path: path.resolve(cwd, "test/fixtures/fined/app.config.js"),
+      extension: ".js",
+    };
+
+    var result = fined(pathObj, defaultObj);
+
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("matches a specific path even without extensions provided without extracting extension", function () {
+    var pathObj = {
+      path: "test/fixtures/fined/app.js",
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, "test/fixtures/fined/app.js"),
+      extension: "",
+    };
+
+    var result = fined(pathObj);
+
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("matches a specific name even without extensions provided without extracting extension", function () {
+    var pathObj = {
+      path: "test/fixtures/fined",
+      name: "app.js",
+      cwd: cwd,
+    };
+
+    var expected = {
+      path: path.resolve(cwd, "test/fixtures/fined/app.js"),
+      extension: "",
+    };
+
+    var result = fined(pathObj);
+
+    assert.deepStrictEqual(result, expected);
+  });
 });
 
 describe("Argument defaulting", function () {
