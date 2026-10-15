@@ -1,5 +1,29 @@
 # Changelog
 
+## [3.0.0](https://github.com/gulpjs/fined/compare/v2.0.0...v3.0.0) (2026-10-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* Convert to ESM ([#28](https://github.com/gulpjs/fined/issues/28))
+* Avoid extracting extension not specified in extensions config ([#24](https://github.com/gulpjs/fined/issues/24))
+* Normalize repository, dropping Node <22.15.0 ([#17](https://github.com/gulpjs/fined/issues/17))
+
+### Features
+
+* Convert to ESM ([#28](https://github.com/gulpjs/fined/issues/28)) ([71f8753](https://github.com/gulpjs/fined/commit/71f87537f74c97f5ce2c8821b22b3bc669e6802f))
+* Remove all dependencies by leveraging Node & ES features ([#21](https://github.com/gulpjs/fined/issues/21)) ([5e5ba57](https://github.com/gulpjs/fined/commit/5e5ba570d374b8c5530205e0f18c0a64883766c2))
+
+
+### Bug Fixes
+
+* Avoid extracting extension not specified in extensions config ([#24](https://github.com/gulpjs/fined/issues/24)) ([9de848f](https://github.com/gulpjs/fined/commit/9de848f672904d37144448a1f2d5fe93e0ea8964))
+
+
+### Miscellaneous Chores
+
+* Normalize repository, dropping Node &lt;22.15.0 ([#17](https://github.com/gulpjs/fined/issues/17)) ([00d4c17](https://github.com/gulpjs/fined/commit/00d4c174ba69ba275eb64e6aae858618da2f58c2))
+
 ## [2.0.0](https://www.github.com/gulpjs/fined/compare/v1.2.0...v2.0.0) (2021-10-31)
 
 
