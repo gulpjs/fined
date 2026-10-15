@@ -1,28 +1,27 @@
 "use strict";
 
-var fs = require("node:fs");
-var path = require("node:path");
+const fs = require("node:fs");
+const path = require("node:path");
 
-var dir = path.resolve(__dirname, "../fixtures/fined");
-var basedir = path.resolve(__dirname, "../../");
+const dir = path.resolve(__dirname, "../fixtures/fined");
+const basedir = path.resolve(__dirname, "../../");
 
-var symlinkedFiles = [0, 1, 2, 3, 4, 5].map(function (v, j) {
+const symlinkedFiles = [0, 1, 2, 3, 4, 5].map(function (v, j) {
   return path.resolve(dir, "symlink" + j + ".json");
 });
 
 if (fs.existsSync(symlinkedFiles[0])) {
-  for (var i0 = symlinkedFiles.length - 1; i0 >= 0; i0--) {
-    fs.unlinkSync(symlinkedFiles[i0]);
+  for (const symlinkedFile of symlinkedFiles) {
+    fs.unlinkSync(symlinkedFile);
   }
 }
 
-var linkedFiles = [
+const linkedFiles = [
   { path: "package.json", type: "file" },
   { path: "xxxx", type: "file" },
   { path: "test/", type: "dir" },
 ];
-for (var i = 0, n = linkedFiles.length; i < n; i++) {
-  var file = linkedFiles[i];
+for (const [i, file] of linkedFiles.entries()) {
   fs.symlinkSync(
     path.resolve(basedir, file.path),
     symlinkedFiles[i * 2],
@@ -32,7 +31,7 @@ for (var i = 0, n = linkedFiles.length; i < n; i++) {
 }
 
 module.exports = symlinkedFiles.map(function (pth) {
-  var ext = path.extname(pth);
+  const ext = path.extname(pth);
   return {
     path: pth,
     dir: path.dirname(pth),
