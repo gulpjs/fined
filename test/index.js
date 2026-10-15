@@ -1,21 +1,83 @@
 "use strict";
 
 const os = require("node:os");
+const fs = require("node:fs");
 const path = require("node:path");
 const assert = require("node:assert");
-const { describe, it } = require("node:test");
+const { describe, it, before, after } = require("node:test");
 
 const cwd = process.cwd();
 const isWindows = os.platform() === "win32";
 
-const userHomeFile = require("./utils/get-userhome-file");
-const symlinkedFiles = require("./utils/create-symlinks");
-
 const fined = require("../");
 
 if (isWindows) {
-  // Workaround for differnce between path.resolve(winDrive) and process.cwd()
+  // Workaround for difference between path.resolve(winDrive) and process.cwd()
   process.chdir(process.cwd());
+}
+
+const userHomeFilePath = path.join(os.homedir(), "gulpjs-fined-test.js");
+const userHomeFile = path.parse(userHomeFilePath);
+
+const fixtures = path.join(__dirname, "fixtures/fined");
+const symlinks = [
+  {
+    from: path.join(fixtures, "package.json"),
+    to: path.join(fixtures, "symlink0.json"),
+    type: "file",
+  },
+  {
+    from: path.join(fixtures, "package.json"),
+    to: path.join(fixtures, "symlink1.json"),
+    type: "file",
+  },
+  {
+    from: path.join(fixtures, "not-exists"),
+    to: path.join(fixtures, "symlink2.json"),
+    type: "file",
+  },
+  {
+    from: path.join(fixtures, "not-exists"),
+    to: path.join(fixtures, "symlink3.json"),
+    type: "file",
+  },
+  {
+    from: path.join(fixtures, ".js/"),
+    to: path.join(fixtures, "symlink4.json"),
+    type: "dir",
+  },
+  {
+    from: path.join(fixtures, ".js/"),
+    to: path.join(fixtures, "symlink5.json"),
+    type: "dir",
+  },
+];
+const symlinkedFiles = symlinks.map(function ({ to }) {
+  const ext = path.extname(to);
+  return {
+    path: to,
+    dir: path.dirname(to),
+    ext: ext,
+    name: path.basename(to, ext),
+  };
+});
+
+function createSymlinks() {
+  for (const { from, to, type } of symlinks) {
+    fs.symlinkSync(from, to, type);
+  }
+}
+function removeSymlinks() {
+  for (const { to } of symlinks) {
+    fs.unlinkSync(to);
+  }
+}
+
+function createUserHomeFile() {
+  fs.writeFileSync(userHomeFilePath, "", "utf-8");
+}
+function removeUserHomeFile() {
+  fs.unlinkSync(userHomeFilePath);
 }
 
 describe("Basic behaviors", function () {
@@ -495,6 +557,9 @@ describe("Argument defaulting", function () {
 });
 
 describe("Properties: `path`", function () {
+  before(createUserHomeFile);
+  after(removeUserHomeFile);
+
   it("defaults `path` when it is null", function () {
     const pathObj = {
       path: null,
@@ -657,7 +722,7 @@ describe("Properties: `path`", function () {
     };
 
     const expected = {
-      path: userHomeFile.path,
+      path: userHomeFilePath,
       extension: userHomeFile.ext,
     };
 
@@ -678,7 +743,7 @@ describe("Properties: `path`", function () {
     };
 
     const expected2 = {
-      path: userHomeFile.path,
+      path: userHomeFilePath,
       extension: userHomeFile.ext,
     };
 
@@ -699,7 +764,7 @@ describe("Properties: `path`", function () {
     };
 
     const expected3 = {
-      path: userHomeFile.path,
+      path: userHomeFilePath,
       extension: userHomeFile.ext,
     };
 
@@ -824,6 +889,9 @@ describe("Properties: `path`", function () {
 });
 
 describe("Properties: `name`", function () {
+  before(createUserHomeFile);
+  after(removeUserHomeFile);
+
   it("ignores `name` when null", function () {
     const pathObj = {
       name: null,
@@ -979,7 +1047,7 @@ describe("Properties: `name`", function () {
     };
 
     const expected2 = {
-      path: userHomeFile.path,
+      path: userHomeFilePath,
       extension: userHomeFile.ext,
     };
 
@@ -1285,6 +1353,9 @@ describe("Properties: `extensions`", function () {
 });
 
 describe("Properties: `cwd`", function () {
+  before(createUserHomeFile);
+  after(removeUserHomeFile);
+
   it("can be absolute", function () {
     const pathObj = {
       cwd: path.resolve("."),
@@ -1442,7 +1513,7 @@ describe("Properties: `cwd`", function () {
     };
 
     const expected = {
-      path: userHomeFile.path,
+      path: userHomeFilePath,
       extension: userHomeFile.ext,
     };
 
@@ -1589,6 +1660,9 @@ describe("Properties: `findUp`", function () {
 });
 
 describe("Symbolic links", function () {
+  before(createSymlinks);
+  after(removeSymlinks);
+
   it("returns symlink path when found link points to a file", function () {
     const pathObj = {
       path: ".",
