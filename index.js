@@ -4,6 +4,18 @@ import path from "node:path";
 import process from "node:process";
 
 /**
+ * Find a file given configuration and defaults describing lookup behavior.
+ *
+ * @param {LookupConfig | string} [pathObj] The user-provided configuration for file lookup.
+ * @param {LookupConfig} [defaultObj] Default configuration for file lookup.
+ * @returns {Found | null} Information about the found file or `null` if it cannot be found.
+ */
+export default function fined(pathObj, defaultObj) {
+  const expandedPath = expandPath(pathObj, defaultObj);
+  return expandedPath ? findWithExpandedPath(expandedPath) : null;
+}
+
+/**
  * @typedef {{ [extension: string]: * }} ExtensionMap Object mapping of extensions to some value.
  */
 
@@ -23,37 +35,11 @@ import process from "node:process";
  */
 
 /**
- * Find a file given configuration and defaults describing lookup behavior.
+ * Creates an expanded config by joining config & defaults and applying normalization.
  *
  * @param {LookupConfig | string} [pathObj] The user-provided configuration for file lookup.
  * @param {LookupConfig} [defaultObj] Default configuration for file lookup.
- * @returns {Found | null} Information about the found file or `null` if it cannot be found.
- */
-export default function fined(pathObj, defaultObj) {
-  const expandedPath = expandPath(pathObj, defaultObj);
-  return expandedPath ? findWithExpandedPath(expandedPath) : null;
-}
-
-/**
- * @typedef {object} ExpandedConfig The expanded configuration after joining config & defaults and applying normalization.
- * @property {string} path The file basename to resolve.
- * @property {string} basedir The root directory to resolve from.
- * @property {boolean} findUp Whether file lookup should recurse up the directory structure.
- * @property {string[]} extArr Array of extensions to lookup
- * @property {ExtensionMap | null} extMap Object mapping of extensions if provided by user.
- */
-
-/**
- * @typedef {object} FoundFile Information about the found file without the {@link ExtensionMap} mapping.
- * @property {string} path The absolute path of the found file.
- * @property {string} extension The extension that matched from configured extensions.
- */
-
-/**
- *
- * @param {LookupConfig | string} [pathObj]
- * @param {LookupConfig} [defaultObj]
- * @returns {ExpandedConfig | null} Information about the found file or `null` if not found.
+ * @returns Information about the found file or `null` if not found.
  */
 function expandPath(pathObj, defaultObj) {
   if (isString(pathObj)) {
@@ -117,7 +103,7 @@ function expandPath(pathObj, defaultObj) {
 /**
  * Resolves an expanded configuration to a file.
  *
- * @param {ExpandedConfig} expanded The expanded configuration to lookup.
+ * @param {NonNullable<ReturnType<typeof expandPath>>} expanded The expanded configuration to lookup.
  * @returns {Found | null} Information about the found file or `null` if it cannot be found.
  */
 function findWithExpandedPath(expanded) {
@@ -144,7 +130,7 @@ function findWithExpandedPath(expanded) {
  * @param {string} basedir The directory to resolve against.
  * @param {string} filename The filename (without extension) to resolve.
  * @param {Array<string>} extArr The extensions to resolve against the filename.
- * @returns {FoundFile | null} Information about the found file or `null` if not found.
+ * @returns Information about the found file or `null` if not found.
  */
 function findFile(basedir, filename, extArr) {
   const noExtPath = path.resolve(basedir, filename);
@@ -167,7 +153,7 @@ function findFile(basedir, filename, extArr) {
  * @param {string} basedir The directory to resolve against.
  * @param {string} filename The filename (without extension) to resolve.
  * @param {Array<string>} extArr The extensions to resolve against the filename.
- * @returns {FoundFile | null} Information about the found file or `null` if not found.
+ * @returns Information about the found file or `null` if not found.
  */
 function findUpFile(basedir, filename, extArr) {
   let lastdir;
